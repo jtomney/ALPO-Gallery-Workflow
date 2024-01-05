@@ -1,0 +1,69 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ALPOGalleryTool.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="VenusUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/Venus_Images_and_Observations/Venus-2023-2024/</Value>
+    </Setting>
+    <Setting Name="SolarUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/Solar-Observations-Archive/</Value>
+    </Setting>
+    <Setting Name="SaturnUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/Saturn-Images-and-Observations/Saturn-Images-YYYY/</Value>
+    </Setting>
+    <Setting Name="RemoteUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/Remote-Planets-Images/2020-2021/</Value>
+    </Setting>
+    <Setting Name="MongoCnnStr" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;mongodb+srv://alpoReader:30Jrq2Rq2V6eDDIK@tomneytrain0-zgh3l.mongodb.net/test?retryWrites=true&amp;amp;w=majority&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">mongodb+srv://alpoReader:30Jrq2Rq2V6eDDIK@tomneytrain0-zgh3l.mongodb.net/test?retryWrites=true&amp;w=majority</Value>
+    </Setting>
+    <Setting Name="MarsUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/Mars-Images-and-Observations/2022-Mars-Apparition/</Value>
+    </Setting>
+    <Setting Name="JupiterUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/Jupiter-Images-and-Observations/Apparition-2022/</Value>
+    </Setting>
+    <Setting Name="SolarStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Solar\Reports</Value>
+    </Setting>
+    <Setting Name="JupiterStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Jupiter\Reports</Value>
+    </Setting>
+    <Setting Name="MarsStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Mars\Reports</Value>
+    </Setting>
+    <Setting Name="SaturnStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Saturn\Reports</Value>
+    </Setting>
+    <Setting Name="VenusStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Venus\Reports</Value>
+    </Setting>
+    <Setting Name="MercuryStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Mercury\Reports</Value>
+    </Setting>
+    <Setting Name="RemoteStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Remote_Planets\Reports</Value>
+    </Setting>
+    <Setting Name="EclipseStaged" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Eclipse\Reports</Value>
+    </Setting>
+    <Setting Name="EclipseUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://alpo-astronomy.org/gallery3/index.php/Eclipse-Images/</Value>
+    </Setting>
+    <Setting Name="MercuryUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://alpo-astronomy.org/gallery3/index.php/MercuryImagesandObservations/Mercury_2023/</Value>
+    </Setting>
+    <Setting Name="SqlSrvCnnStr" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;Data Source=tcp:s25.winhost.com;Initial Catalog=DB_50230_familydata;Persist Security Info=True;User ID=DB_50230_familydata_user;Password=P!sc3sGlyxM74&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=tcp:s25.winhost.com;Initial Catalog=DB_50230_familydata;Persist Security Info=True;User ID=DB_50230_familydata_user;Password=P!sc3sGlyxM74</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

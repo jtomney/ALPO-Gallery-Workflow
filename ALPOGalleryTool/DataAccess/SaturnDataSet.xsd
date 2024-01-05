@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SaturnDataSet" targetNamespace="http://tempuri.org/SaturnDataSet.xsd" xmlns:mstns="http://tempuri.org/SaturnDataSet.xsd" xmlns="http://tempuri.org/SaturnDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="SqlSrvCnnStr" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="SqlSrvCnnStr (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.ALPOGalleryTool.Properties.Settings.GlobalReference.Default.SqlSrvCnnStr" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vwSaturnCMTableAdapter" GeneratorDataComponentClassName="vwSaturnCMTableAdapter" Name="vwSaturnCM" UserDataComponentName="vwSaturnCMTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="SqlSrvCnnStr (Settings)" DbObjectName="DB_50230_familydata.dbo.vwSaturnCM" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        vwSaturnCM.*
+FROM            vwSaturnCM</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="cm_transit" DataSetColumn="cm_transit" />
+              <Mapping SourceColumn="system" DataSetColumn="system" />
+              <Mapping SourceColumn="planet" DataSetColumn="planet" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SaturnDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="SaturnDataSet" msprop:Generator_DataSetName="SaturnDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vwSaturnCM" msprop:Generator_RowEvHandlerName="vwSaturnCMRowChangeEventHandler" msprop:Generator_RowDeletedName="vwSaturnCMRowDeleted" msprop:Generator_RowDeletingName="vwSaturnCMRowDeleting" msprop:Generator_RowEvArgName="vwSaturnCMRowChangeEvent" msprop:Generator_TablePropName="vwSaturnCM" msprop:Generator_RowChangedName="vwSaturnCMRowChanged" msprop:Generator_RowChangingName="vwSaturnCMRowChanging" msprop:Generator_TableClassName="vwSaturnCMDataTable" msprop:Generator_RowClassName="vwSaturnCMRow" msprop:Generator_TableVarName="tablevwSaturnCM" msprop:Generator_UserTableName="vwSaturnCM">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="cm_transit" msprop:Generator_ColumnPropNameInRow="cm_transit" msprop:Generator_ColumnPropNameInTable="cm_transitColumn" msprop:Generator_ColumnVarNameInTable="columncm_transit" msprop:Generator_UserColumnName="cm_transit" type="xs:dateTime" />
+              <xs:element name="system" msprop:Generator_ColumnPropNameInRow="system" msprop:Generator_ColumnPropNameInTable="systemColumn" msprop:Generator_ColumnVarNameInTable="columnsystem" msprop:Generator_UserColumnName="system">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="planet" msprop:Generator_ColumnPropNameInRow="planet" msprop:Generator_ColumnPropNameInTable="planetColumn" msprop:Generator_ColumnVarNameInTable="columnplanet" msprop:Generator_UserColumnName="planet">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:vwSaturnCM" />
+      <xs:field xpath="mstns:cm_transit" />
+      <xs:field xpath="mstns:system" />
+      <xs:field xpath="mstns:planet" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

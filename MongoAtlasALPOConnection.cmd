@@ -1,0 +1,1 @@
+mongo "mongodb+srv://tomneytrain0-zgh3l.mongodb.net/alpo" --username alpoReader

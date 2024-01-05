@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4B481042-4AB8-47B2-9EE0-4CAE73491E64}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ALPOGalleryTool</RootNamespace>
+    <AssemblyName>ALPOGalleryTool</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cyotek.Windows.Forms.ImageBox, Version=1.1.4.2, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Cyotek.Windows.Forms.ImageBox.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttachmentPoco.cs" />
+    <Compile Include="DataAccess\MongoDataSrvc.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoCmTransit.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoCrRtn.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoLongitude.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoPersistentTag.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoMarsObservation.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoSolarObservation.cs" />
+    <Compile Include="DataAccess\MongoObsrvProfile.cs" />
+    <Compile Include="DataAccess\SaturnDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SaturnDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataAccess\SqlSrvDataSrv.cs" />
+    <Compile Include="DataAccess\SqlSrvDto\ActvRgnDateDto.cs" />
+    <Compile Include="DataAccess\VenusDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VenusDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="FrmActvRgnInsrt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmActvRgnInsrt.Designer.cs">
+      <DependentUpon>FrmActvRgnInsrt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmEclipse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmEclipse.Designer.cs">
+      <DependentUpon>FrmEclipse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMenu.Designer.cs">
+      <DependentUpon>FrmMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmResize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmResize.Designer.cs">
+      <DependentUpon>FrmResize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSaturn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSaturn.Designer.cs">
+      <DependentUpon>FrmSaturn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSolar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSolar.Designer.cs">
+      <DependentUpon>FrmSolar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmVenus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmVenus.Designer.cs">
+      <DependentUpon>FrmVenus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IActvRgnDataSrvc.cs" />
+    <Compile Include="Interfaces\ITelescope.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoObservation.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoObserver.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoTelescope.cs" />
+    <Compile Include="FrmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IDataSrvc.cs" />
+    <Compile Include="Interfaces\IObservation.cs" />
+    <Compile Include="Interfaces\IObserver.cs" />
+    <Compile Include="JupiterCentralMeridian.cs" />
+    <Compile Include="MarsCentralMeridian.cs" />
+    <Compile Include="ModalAddObserver.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalAddObserver.Designer.cs">
+      <DependentUpon>ModalAddObserver.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalAddTelescope.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalAddTelescope.Designer.cs">
+      <DependentUpon>ModalAddTelescope.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalResize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalResize.Designer.cs">
+      <DependentUpon>ModalResize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalSelectProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalSelectProfile.Designer.cs">
+      <DependentUpon>ModalSelectProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OutlookDataObject.cs" />
+    <Compile Include="OutlookStorage.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaturnCentralMeridian.cs" />
+    <EmbeddedResource Include="FrmActvRgnInsrt.resx">
+      <DependentUpon>FrmActvRgnInsrt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmEclipse.resx">
+      <DependentUpon>FrmEclipse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmMenu.resx">
+      <DependentUpon>FrmMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmResize.resx">
+      <DependentUpon>FrmResize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSaturn.resx">
+      <DependentUpon>FrmSaturn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSolar.resx">
+      <DependentUpon>FrmSolar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmVenus.resx">
+      <DependentUpon>FrmVenus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalAddObserver.resx">
+      <DependentUpon>ModalAddObserver.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalAddTelescope.resx">
+      <DependentUpon>ModalAddTelescope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalResize.resx">
+      <DependentUpon>ModalResize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalSelectProfile.resx">
+      <DependentUpon>ModalSelectProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="DataAccess\SaturnDataSet.xsc">
+      <DependentUpon>SaturnDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="DataAccess\SaturnDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SaturnDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataAccess\SaturnDataSet.xss">
+      <DependentUpon>SaturnDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="DataAccess\VenusDataSet.xsc">
+      <DependentUpon>VenusDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="DataAccess\VenusDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>VenusDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataAccess\VenusDataSet.xss">
+      <DependentUpon>VenusDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2020-04-02-1457_3-TR-Ha-SEProm.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-add-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ImageProcessor">
+      <Version>2.9.1</Version>
+    </PackageReference>
+    <PackageReference Include="MailKit">
+      <Version>2.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="MongoDB.Driver">
+      <Version>2.23.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Cyotek.Windows.Forms.ImageBox.dll" />
+    <Content Include="lib\Cyotek.Windows.Forms.ImageBox.pdb" />
+    <Content Include="FutureTasks.txt" />
+    <None Include="Resources\alert-chime.wav" />
+    <None Include="Resources\create_map_icon.png" />
+    <None Include="Resources\6777308_blank_create_new_icon.png" />
+    <None Include="Resources\arrow-refresh-icon.png" />
+    <None Include="Resources\Upload-icon.png" />
+    <None Include="Resources\customer.png" />
+    <None Include="Resources\profile.png" />
+    <None Include="Resources\UpArrow.png" />
+    <None Include="Resources\pxfuel_com_1_640x480_yug_icon.ico" />
+    <None Include="Resources\x-office-spreadsheet-icon.png" />
+    <None Include="Resources\Maps-Globe-Filled-icon.png" />
+    <None Include="Resources\Telescope-Reflecting-icon.png" />
+    <None Include="Resources\Folder-photos-icon.png" />
+    <None Include="Resources\folder.png" />
+    <None Include="Resources\folder-icon.png" />
+    <None Include="Resources\minus-icon.png" />
+    <None Include="Resources\Actions-trash-empty-icon.png" />
+    <None Include="Resources\document-split-icon.png" />
+    <None Include="Resources\Stamp-icon.png" />
+    <None Include="Resources\20-gear-2-icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

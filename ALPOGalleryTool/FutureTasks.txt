@@ -1,0 +1,2 @@
+﻿- Implement image resizing
+- Implement indexing edits

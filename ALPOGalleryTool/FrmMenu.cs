@@ -14,6 +14,7 @@ namespace ALPOGalleryTool
     public partial class FrmMenu : Form
     {
         private readonly IDataSrvc _dataSrvc;
+        private readonly IEclipseDataSrvc _eclipseDataSrvc;
         private FrmActvRgnInsrt _frmActvRgnInsrt;
         private FrmEclipse _frmEclipse;
         private FrmMain _frmMain;
@@ -21,10 +22,11 @@ namespace ALPOGalleryTool
         private FrmSolar _frmSolar;
         private FrmVenus _frmVenus;
 
-        public FrmMenu(IDataSrvc dataSrvc)
+        public FrmMenu(IDataSrvc dataSrvc, IEclipseDataSrvc eclipseDataSrvc)
         {
             InitializeComponent();
             _dataSrvc = dataSrvc;
+            _eclipseDataSrvc = eclipseDataSrvc;
         }
 
         private void solarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -73,7 +75,7 @@ namespace ALPOGalleryTool
         {
             if (_frmEclipse == null)
             {
-                _frmEclipse = new FrmEclipse(_dataSrvc);
+                _frmEclipse = new FrmEclipse(_eclipseDataSrvc,_dataSrvc);
                 _frmEclipse.Disposed += delegate (object o, EventArgs arg)
                 {
                     _frmEclipse = null;

@@ -74,6 +74,8 @@ namespace ALPOGalleryTool
             this.label11 = new System.Windows.Forms.Label();
             this.lstCardinal = new System.Windows.Forms.ListBox();
             this.ckExtractOnly = new System.Windows.Forms.CheckBox();
+            this.btnShowSpectrum = new System.Windows.Forms.Button();
+            this.lblBadDate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).BeginInit();
             this.SuspendLayout();
             // 
@@ -260,6 +262,7 @@ namespace ALPOGalleryTool
             this.lstFilters.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lstFilters.Size = new System.Drawing.Size(78, 94);
             this.lstFilters.TabIndex = 56;
+            this.lstFilters.SelectedIndexChanged += new System.EventHandler(this.lstFilters_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -314,12 +317,13 @@ namespace ALPOGalleryTool
             this.lblFileName.AutoSize = true;
             this.lblFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFileName.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblFileName.Location = new System.Drawing.Point(693, 630);
+            this.lblFileName.Location = new System.Drawing.Point(703, 630);
             this.lblFileName.Name = "lblFileName";
             this.lblFileName.Size = new System.Drawing.Size(69, 16);
             this.lblFileName.TabIndex = 51;
             this.lblFileName.Text = "File Name";
             this.lblFileName.TextChanged += new System.EventHandler(this.lblFileName_TextChanged);
+            this.lblFileName.DoubleClick += new System.EventHandler(this.lblFileName_DoubleClick);
             // 
             // lstOtherFltr
             // 
@@ -544,12 +548,39 @@ namespace ALPOGalleryTool
             this.ckExtractOnly.Text = "Extract Image Only";
             this.ckExtractOnly.UseVisualStyleBackColor = true;
             // 
+            // btnShowSpectrum
+            // 
+            this.btnShowSpectrum.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.Spectrum;
+            this.btnShowSpectrum.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnShowSpectrum.Location = new System.Drawing.Point(4, 392);
+            this.btnShowSpectrum.Name = "btnShowSpectrum";
+            this.btnShowSpectrum.Size = new System.Drawing.Size(24, 24);
+            this.btnShowSpectrum.TabIndex = 79;
+            this.btnShowSpectrum.UseVisualStyleBackColor = true;
+            this.btnShowSpectrum.Click += new System.EventHandler(this.btnShowSpectrum_Click);
+            // 
+            // lblBadDate
+            // 
+            this.lblBadDate.AutoSize = true;
+            this.lblBadDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.lblBadDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBadDate.ForeColor = System.Drawing.Color.Red;
+            this.lblBadDate.Location = new System.Drawing.Point(12, 207);
+            this.lblBadDate.Name = "lblBadDate";
+            this.lblBadDate.Size = new System.Drawing.Size(23, 29);
+            this.lblBadDate.TabIndex = 80;
+            this.lblBadDate.Text = "*";
+            this.lblBadDate.Visible = false;
+            this.lblBadDate.VisibleChanged += new System.EventHandler(this.lblBadDate_VisibleChanged);
+            // 
             // FrmSolar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1364, 672);
+            this.Controls.Add(this.lblBadDate);
+            this.Controls.Add(this.btnShowSpectrum);
             this.Controls.Add(this.ckExtractOnly);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.lstCardinal);
@@ -652,5 +683,7 @@ namespace ALPOGalleryTool
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ListBox lstCardinal;
         private System.Windows.Forms.CheckBox ckExtractOnly;
+        private System.Windows.Forms.Button btnShowSpectrum;
+        private System.Windows.Forms.Label lblBadDate;
     }
 }

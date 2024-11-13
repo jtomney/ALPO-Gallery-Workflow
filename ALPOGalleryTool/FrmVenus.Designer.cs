@@ -61,6 +61,7 @@
             this.btnTrash = new System.Windows.Forms.Button();
             this.btnGenSectRpt = new System.Windows.Forms.Button();
             this.lblDateError = new System.Windows.Forms.Label();
+            this.btnRecalcDate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).BeginInit();
             this.SuspendLayout();
             // 
@@ -397,12 +398,24 @@
             this.lblDateError.Visible = false;
             this.lblDateError.VisibleChanged += new System.EventHandler(this.lblDateError_VisibleChanged);
             // 
+            // btnRecalcDate
+            // 
+            this.btnRecalcDate.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.arrow_refresh_icon;
+            this.btnRecalcDate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnRecalcDate.Location = new System.Drawing.Point(394, 199);
+            this.btnRecalcDate.Name = "btnRecalcDate";
+            this.btnRecalcDate.Size = new System.Drawing.Size(24, 24);
+            this.btnRecalcDate.TabIndex = 124;
+            this.btnRecalcDate.UseVisualStyleBackColor = true;
+            this.btnRecalcDate.Click += new System.EventHandler(this.btnRecalcDate_Click);
+            // 
             // FrmVenus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1370, 681);
+            this.Controls.Add(this.btnRecalcDate);
             this.Controls.Add(this.lblDateError);
             this.Controls.Add(this.btnGenSectRpt);
             this.Controls.Add(this.btnTrash);
@@ -482,5 +495,6 @@
         private System.Windows.Forms.Button btnTrash;
         private System.Windows.Forms.Button btnGenSectRpt;
         private System.Windows.Forms.Label lblDateError;
+        private System.Windows.Forms.Button btnRecalcDate;
     }
 }

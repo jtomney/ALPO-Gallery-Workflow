@@ -336,8 +336,17 @@ namespace ALPOGalleryTool
 
         private void TrySetFilter()
         {
+            if (lstAttachments.Text.ToUpper().Contains("-CH4-") ||
+                lstAttachments.Text.ToUpper().Contains("-CH4_") ||
+                lstAttachments.Text.ToUpper().Contains(" CH4 ") ||
+                lstAttachments.Text.ToUpper().Contains("_CH4_"))
+            {
+                lstFilters.ClearSelected();
+                lstFilters.SetSelected(lstFilters.FindString("CH4"), true);
+            }
             if (lstAttachments.Text.ToUpper().Contains("-IR-") ||
                 lstAttachments.Text.ToUpper().Contains("-IR_") ||
+                 lstAttachments.Text.ToUpper().Contains("-IR685") ||
                 lstAttachments.Text.ToUpper().Contains(" IR ") ||
                 lstAttachments.Text.ToUpper().Contains("_IR_"))
             {
@@ -446,8 +455,8 @@ namespace ALPOGalleryTool
             List<string> _persistentTags = _dataSrvc.GetPersistentTags("Saturn").ToList();
             List<string> allTags = _tags.Union(_persistentTags).ToList();
             allTags.Sort();
-            _tags = allTags;
-            lstTags.Items.AddRange(allTags.ToArray());
+            _tags = allTags.Where(t => t.Contains("Block") == false).ToList();
+            lstTags.Items.AddRange(_tags.ToArray());
         }
 
         private void LoadReports()
@@ -499,6 +508,7 @@ namespace ALPOGalleryTool
             lstOtherFltr.Items.Add("UV Block");
             lstOtherFltr.Items.Add("UV-IR Block");
             lstOtherFltr.Items.Add("Wr8");
+            lstOtherFltr.Items.Add("Wr11");
             lstOtherFltr.Items.Add("Wr15");
             lstOtherFltr.Items.Add("Wr23A");
             lstOtherFltr.Items.Add("Wr58");
@@ -681,12 +691,18 @@ namespace ALPOGalleryTool
                         dtObsrvTime.CalendarForeColor = Color.Black;
                     }
                     TrySetFilter();
+                    ClearSecondaryFilters();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Error Loading Attachment", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void ClearSecondaryFilters()
+        {
+            lstOtherFltr.SelectedIndex = -1;
         }
 
         protected void txtTags_DoubleClick(object sender, EventArgs e)

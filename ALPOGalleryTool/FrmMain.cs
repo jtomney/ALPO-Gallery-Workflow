@@ -241,6 +241,29 @@ namespace ALPOGalleryTool
                 }
             }
 
+            if (cmbObserver.Text == @"ClyFstr" && cmbSections.Text == "Mercury")
+            {
+                string tmp = _tmpFileName.Substring(0, 1);
+                string x = _tmpFileName;
+                while (Int32.TryParse(tmp, out int i) == false)
+                {
+                    x = x.Substring(1);
+                    tmp = x.Substring(0, 1);
+                }
+                string dy = x.Substring(0, 2);
+                string mnth = x.Substring(2, 2);
+                string yr = x.Substring(4, 4);
+                string hr = x.Substring(11, 2);
+                string mn = x.Substring(13, 2);
+                string fileDT = yr + "-" + mnth + "-" + dy + " " + hr + ":" + mn;
+                if (DateTime.TryParse(fileDT, out DateTime dtm))
+                {
+                    ObsrvDate.Value = dtm;
+                    dtObsrvTime.Value = dtm;
+                }
+                return;
+            }
+
             if (cmbObserver.Text == @"ClyFstr" && cmbSections.Text != "Mars")
             {
                 string fileDT = _tmpFileName.Substring(0, 10) + " " +
@@ -253,9 +276,16 @@ namespace ALPOGalleryTool
                 }
                 return;
             }
+
             if (cmbObserver.Text == @"ClyFstr" && cmbSections.Text == "Mars")
             {
-                string x = _tmpFileName.Substring(5);
+                string tmp = _tmpFileName.Substring(0, 1);
+                string x = _tmpFileName;
+                while (Int32.TryParse(tmp, out int i) == false)
+                {
+                    x = x.Substring(1);
+                    tmp = x.Substring(0, 1);
+                }
                 string dy = x.Substring(0, 2);
                 string mnth = x.Substring(2, 2);
                 string yr = x.Substring(4, 4);
@@ -709,12 +739,13 @@ namespace ALPOGalleryTool
 
         private void TrySetFilter()
         {
+            lstFilters.ClearSelected();
             if (lstAttachments.Text.ToUpper().Contains("-IR-") ||
                 lstAttachments.Text.ToUpper().Contains("-IR_") ||
                 lstAttachments.Text.ToUpper().Contains("_IR_") ||
                 lstAttachments.Text.ToUpper().Contains(" IR "))
             {
-                lstFilters.ClearSelected();
+                //lstFilters.ClearSelected();
                 lstFilters.SetSelected(lstFilters.FindString("IR"), true);
             }
             if (lstAttachments.Text.ToUpper().Contains("-RGB-") ||
@@ -723,7 +754,7 @@ namespace ALPOGalleryTool
                 lstAttachments.Text.ToUpper().Contains("-RGB_") ||
                 lstAttachments.Text.ToUpper().Contains(" RGB "))
             {
-                lstFilters.ClearSelected();
+                //lstFilters.ClearSelected();
                 lstFilters.SetSelected(lstFilters.FindString("RGB"), true);
             }
             if (lstAttachments.Text.ToUpper().Contains("-WL-") ||
@@ -732,7 +763,7 @@ namespace ALPOGalleryTool
                 lstAttachments.Text.ToUpper().Contains("-L-") ||
                 lstAttachments.Text.ToUpper().Contains(" WL "))
             {
-                lstFilters.ClearSelected();
+                //lstFilters.ClearSelected();
                 lstFilters.SetSelected(lstFilters.FindString("WL"), true);
             }
             if (lstAttachments.Text.ToUpper().Contains("-CH4-") ||
@@ -740,7 +771,7 @@ namespace ALPOGalleryTool
                 lstAttachments.Text.ToUpper().Contains("_CH4_") ||
                 lstAttachments.Text.ToUpper().Contains(" CH4 "))
             {
-                lstFilters.ClearSelected();
+                //lstFilters.ClearSelected();
                 lstFilters.SetSelected(lstFilters.FindString("CH4"), true);
             }
             if (lstAttachments.Text.ToUpper().Contains("-UV-") ||
@@ -748,7 +779,7 @@ namespace ALPOGalleryTool
                 lstAttachments.Text.ToUpper().Contains("_UV_") ||
                 lstAttachments.Text.ToUpper().Contains(" UV "))
             {
-                lstFilters.ClearSelected();
+                //lstFilters.ClearSelected();
                 lstFilters.SetSelected(lstFilters.FindString("UV"), true);
             }
         }

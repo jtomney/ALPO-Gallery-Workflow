@@ -345,5 +345,37 @@ namespace ALPOGalleryTool.DataAccess
             }
             return result;
         }
+
+        public IEnumerable<string> GetRecentTagsByObsrvDt(string section, int lookBack, DateTime obsrvDt)
+        {
+            lookBack = lookBack * (-1);
+            List<String> result = new List<string>();
+            try
+            {
+                string connectionString = _cnnStr;
+                var client = new MongoClient(connectionString);
+                var db = client.GetDatabase("alpo");
+                IMongoCollection<MongoObservation> col = db.GetCollection<MongoObservation>("observations");
+                var bldr = Builders<MongoObservation>.Filter.Eq(o => o.Section, section) &
+                           Builders<MongoObservation>.Filter.Gte(o => o.UtObsrvDt, obsrvDt.AddDays(lookBack)) &
+                           Builders<MongoObservation>.Filter.Lte(o => o.UtObsrvDt, obsrvDt.AddDays(lookBack * -1));
+                var observations = col.Find(bldr).ToList();
+                foreach (MongoObservation obs in observations)
+                {
+                    foreach (string tag in obs.Tags)
+                    {
+                        if (!tag.ToUpper().StartsWith("CM") && !result.Contains(tag) && !string.IsNullOrEmpty(tag))
+                        {
+                            result.Add(tag);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Add(e.Message);
+            }
+            return result;
+        }
     }
 }

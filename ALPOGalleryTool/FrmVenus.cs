@@ -21,21 +21,24 @@ namespace ALPOGalleryTool
 {
     public partial class FrmVenus : Form
     {
+        private const double CmI_Period = 564;
+        //543.185;
+        private const double CmII_Period = 16.57955;
+
         private readonly IDataSrvc _dataSrvc;
         private readonly string _wrkFldr;
+        private Dictionary<string, AttachmentPoco> _attachments = new Dictionary<string, AttachmentPoco>();
+        private VenusDataSet.Venus_CMDataTable _cmData = new VenusDataSet.Venus_CMDataTable();
+        private Dictionary<string, string> _imgFiles = new Dictionary<string, string>();
+        private bool _initDone = false;
         private List<IObserver> _observers = new List<IObserver>();
+        private VenusDataSet.Venus_Phase_ElngDataTable _phaseElngData = new VenusDataSet.Venus_Phase_ElngDataTable();
+        private string _rptAuthorEmail;
         private List<string> _tags = new List<string>();
         private List<ITelescope> _telescopes = new List<ITelescope>();
-        private Dictionary<string, string> _imgFiles = new Dictionary<string, string>();
-        private Dictionary<string, AttachmentPoco> _attachments = new Dictionary<string, AttachmentPoco>();
-        private bool _initDone = false;
-        private int cnt = 0;
-        private string _rptAuthorEmail;
         private string _tmpFileName;
-        private VenusDataSet.Venus_Phase_ElngDataTable _phaseElngData = new VenusDataSet.Venus_Phase_ElngDataTable();
-        private VenusDataSet.Venus_CMDataTable _cmData = new VenusDataSet.Venus_CMDataTable();
-        private const double CmI_Period = 564; //543.185;
-        private const double CmII_Period = 16.57955; //15.808333;
+        private int cnt = 0;
+        //15.808333;
 
         public FrmVenus(IDataSrvc dataSrvc)
         {
@@ -52,317 +55,30 @@ namespace ALPOGalleryTool
             LoadCmData();
         }
 
-        private void LoadTags()
+        protected void btnAddTags_Click(object sender, EventArgs e)
         {
-            lstTags.Items.Clear();
-            _tags = _dataSrvc.GetRecentTags("Venus")
-                .Where(t => t.StartsWith("Elng") == false && t.StartsWith("Phase") == false).ToList();
-            List<string> _persistentTags = _dataSrvc.GetPersistentTags("Venus").ToList();
-            List<string> allTags = _tags.Union(_persistentTags).ToList();
-            allTags.Sort();
-            _tags = allTags;
-            lstTags.Items.AddRange(allTags.ToArray());
+            txtTags.Text = string.Empty;
+            string tmp = string.Empty;
+            foreach (var item in lstTags.SelectedItems)
+            {
+                tmp += item + ",";
+            }
+            txtTags.Text = tmp.Substring(0, tmp.Length - 1);
+            lstTags.SelectedItems.Clear();
         }
 
-        private void LoadReports()
+        protected void btnApndTags_Click(object sender, EventArgs e)
         {
-            lstMsgs.Items.Clear();
-            DirectoryInfo di = new DirectoryInfo(_wrkFldr);
-            FileInfo[] imgs = di.GetFiles();
-            foreach (FileInfo img in imgs)
+            string tmp = txtTags.Text + ",";
+            foreach (var item in lstTags.SelectedItems)
             {
-                lstMsgs.Items.Add(img.Name);
-                _imgFiles.Add(img.Name, img.FullName);
+                tmp += item + ",";
             }
-            _attachments.Clear();
+            txtTags.Text = tmp.Substring(0, tmp.Length - 1);
+            lstTags.SelectedItems.Clear();
         }
 
-        private void LoadUsers()
-        {
-            cmbObserver.Items.Clear();
-            _observers = _dataSrvc.GetAllObservers().OrderBy(o => o.Initials).ToList();
-            if (_observers.Any())
-            {
-                var initials = _observers.Select(o => o.Initials);
-                foreach (string initial in initials)
-                {
-                    cmbObserver.Items.Add(initial);
-                }
-            }
-        }
-
-        private void LoadFilters()
-        {
-            lstOtherFltr.Items.Clear();
-            lstFilters.Items.Clear();
-            lstFilters.Items.Add("CH4");
-            lstFilters.Items.Add("IR");
-            lstFilters.Items.Add("WL");
-            lstFilters.Items.Add("RGB");
-            lstFilters.Items.Add("R");
-            lstFilters.Items.Add("UV");
-            lstOtherFltr.Items.Add("IR-Block");
-            lstOtherFltr.Items.Add("UV-Block");
-            lstOtherFltr.Items.Add("UV-IR-Block");
-            lstOtherFltr.Items.Add("Wr15");
-            lstOtherFltr.Items.Add("Wr21");
-            lstOtherFltr.Items.Add("Wr47");
-
-        }
-
-        private void LoadTelescopes()
-        {
-            _telescopes.Clear();
-            _telescopes = _dataSrvc.GetAllTelescopes().ToList();
-        }
-
-        private void lstMsgs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_initDone)
-            {
-                cmbObserver.SelectedIndex = -1;
-                cmbTelescopes.Items.Clear();
-                txtTags.Text = string.Empty;
-                txtSeeing.Text = "0";
-                txtTrnsp.Text = "0";
-                lstFilters.SelectedIndex = -1;
-                lstOtherFltr.SelectedIndex = -1;
-                LoadMsg();
-            }
-        }
-
-        private void LoadMsg()
-        {
-            try
-            {
-                lstAttachments.Items.Clear();
-                string msgfile = Path.Combine(_wrkFldr, lstMsgs.Text);
-                Stream messageStream = File.Open(msgfile, FileMode.Open, FileAccess.Read);
-                OutlookStorage.Message message = new OutlookStorage.Message(messageStream);
-                messageStream.Close();
-                _rptAuthorEmail = message.From;
-                foreach (var attachment in message.Attachments)
-                {
-                    AttachmentPoco tmp = new AttachmentPoco
-                    {
-                        Data = attachment.Data,
-                        FileName = GenerateFileName(attachment.Filename)
-                    };
-                    lstAttachments.Items.Add(tmp.FileName);
-                    _attachments.Add(tmp.FileName, tmp);
-                }
-                rtbNotes.Text = message.BodyText;
-                TrySetObserver();
-                message.Dispose();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void TrySetObserver()
-        {
-            cmbTelescopes.Items.Clear();
-            cmbTelescopes.Text = string.Empty;
-
-            IObserver obsrvr = null;
-            if (ckOverride.Checked)
-            {
-                obsrvr = _observers.FirstOrDefault(o => o.Initials == cmbObserver.Text);
-            }
-            else
-            {
-                obsrvr = _observers.FirstOrDefault(o => o.EmailName.ToLower() == _rptAuthorEmail.ToLower());
-            }
-            if (obsrvr != null)
-            {
-                cmbObserver.Text = obsrvr.Initials;
-                lblObsrvName.Text = (obsrvr.FirstName + " " + obsrvr.LastName).Trim();
-                //btnProfile.Visible = HasProfile(obsrvr.Initials);
-                var scopes = _telescopes.Where(s => s.Initials == obsrvr.Initials);
-                if (scopes.Any())
-                {
-                    List<string> lst = new List<string>();
-                    foreach (ITelescope scope in scopes)
-                    {
-                        string focalRatio = @"f/" + scope.FocalRatio;
-                        string focalLength = @"FL " + scope.FocalLength;
-                        string suffix = "";
-                        if (scope.FocalLength > -1 || scope.FocalRatio > -1)
-                        {
-                            suffix = scope.FocalLength > -1 ? focalLength : focalRatio;
-                            lst.Add((scope.ScopeType + @" " + scope.Aperture + @"mm " + suffix).Trim());
-                        }
-                        else
-                        {
-                            lst.Add((scope.ScopeType + @" " + scope.Aperture + @"mm " + suffix).Trim());
-                        }
-                    }
-
-                    lst = PrepTelescopeList(lst);
-                    cmbTelescopes.Items.Clear();
-                    cmbTelescopes.Items.AddRange(lst.ToArray());
-                    cmbTelescopes.SelectedIndex = -1;
-                }
-                else
-                {
-                    cmbTelescopes.Items.Clear();
-                }
-            }
-            if (!cmbTelescopes.Items.Contains("Undetermined")) cmbTelescopes.Items.Add("Undetermined");
-        }
-
-        private List<string> PrepTelescopeList(List<string> lst)
-        {
-            lst = lst.Distinct(
-                StringComparer.CurrentCultureIgnoreCase).ToList();
-            lst.Sort();
-            lst.Insert(0, "Undetermined");
-            return lst;
-        }
-
-        private string GenerateFileName(string attachmentFileName)
-        {
-            string name = Path.GetFileNameWithoutExtension(attachmentFileName);
-            string ext = Path.GetExtension(attachmentFileName);
-            cnt++;
-            return name + "_id" + cnt.ToString("00") + ext;
-        }
-
-        private void FrmVenus_Shown(object sender, EventArgs e)
-        {
-            _initDone = true;
-            this.WindowState = FormWindowState.Maximized;
-        }
-
-        protected void lstAttachments_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_initDone)
-            {
-                try
-                {
-                    MemoryStream ms = new MemoryStream(_attachments[lstAttachments.Text].Data);
-                    imgObservation.Image = Image.FromStream(ms);
-                    imgObservation.Text = lstAttachments.Text;
-                    TenthsMin.Value = 0;
-                    //lstCardinal.SelectedIndex = -1;
-                    SetTagList();
-                    lblOversized.Visible = _attachments[lstAttachments.Text].Data.LongLength > 300000;
-                    lblOversized.Text = "Oversized: " + _attachments[lstAttachments.Text].Data.LongLength.ToString("N0");
-                    _tmpFileName = lstAttachments.Text;
-                    TrySetFilter();
-                    TrySetObsrvTimestamp();
-                    lblFileName.Text = String.Empty;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error Loading Attachment", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void TrySetObsrvTimestamp()
-        {
-            lblDateError.Visible = false;
-            if (string.IsNullOrEmpty(_tmpFileName))
-            {
-                lblDateError.Visible = true;
-                return;
-            }
-            else
-            {
-                ObsrvDate.CalendarForeColor = Color.White;
-                TenthsMin.Value = 0;
-
-                while (Int32.TryParse(_tmpFileName.Substring(0, 1), out int tmp) == false)
-                {
-                    _tmpFileName = _tmpFileName.Substring(1);
-                }
-
-                //Pattern: ddMMyyyy hhmm **********************************************
-                if (cmbObserver.Text == @"ClyFstr")
-                {
-                    string tmp = _tmpFileName.ToUpper().Replace("SATURN ", "");
-                    string fileDT = tmp.Substring(4, 4) + "-" +
-                                    tmp.Substring(2, 2) + "-" +
-                                    tmp.Substring(0, 2) + " " +
-                                          tmp.Substring(9, 2) + ":" +
-                                          tmp.Substring(11, 2);
-                    if (DateTime.TryParse(fileDT, out DateTime dtm))
-                    {
-                        ObsrvDate.Value = dtm;
-                        dtObsrvTime.Value = dtm;
-                    }
-                    return;
-                }
-
-                string tmpFileNameForDate = _tmpFileName.Replace("[", "_").Replace("]", "");
-                string fileDateTime = tmpFileNameForDate.Substring(0, 10) + " " +
-                                      tmpFileNameForDate.Substring(11, 2) + ":" +
-                                      tmpFileNameForDate.Substring(13, 2);
-                if (fileDateTime.Substring(0, 10).Contains("_"))
-                {
-                    fileDateTime = fileDateTime.Substring(0, 10).Replace("_", "-") + fileDateTime.Substring(10);
-                }
-                if (DateTime.TryParse(fileDateTime, out DateTime dt))
-                {
-                    ObsrvDate.Value = dt;
-                    dtObsrvTime.Value = dt;
-                }
-                else
-                {
-                    lblDateError.Visible = true;
-                }
-
-                if (tmpFileNameForDate.IndexOf("_", StringComparison.Ordinal) == 15)
-                {
-                    if (int.TryParse(tmpFileNameForDate.Substring(16, 1), out int i))
-                    {
-                        TenthsMin.Value = i;
-                    }
-                }
-            }
-        }
-
-        private void TrySetFilter()
-        {
-            if (lstAttachments.Text.ToUpper().Contains("-WL-") ||
-                lstAttachments.Text.ToUpper().Contains("-WL_") ||
-                lstAttachments.Text.ToUpper().Contains("_WL_") ||
-                                lstAttachments.Text.ToUpper().Contains("-L_") ||
-                lstAttachments.Text.ToUpper().Contains("_L_") ||
-                lstAttachments.Text.ToUpper().Contains("-L-"))
-            {
-                lstFilters.ClearSelected();
-                lstFilters.SetSelected(lstFilters.FindString("WL"), true);
-            }
-            if (lstAttachments.Text.ToUpper().Contains("-IR-") ||
-                lstAttachments.Text.ToUpper().Contains("_IR"))
-            {
-                lstFilters.ClearSelected();
-                lstFilters.SetSelected(lstFilters.FindString("IR"), true);
-            }
-            if (lstAttachments.Text.ToUpper().Contains("-UV-") ||
-                lstAttachments.Text.ToUpper().Contains("-UV_") ||
-                lstAttachments.Text.ToUpper().Contains("_UV_"))
-            {
-                lstFilters.ClearSelected();
-                lstFilters.SetSelected(lstFilters.FindString("UV"), true);
-            }
-        }
-
-        private void SetTagList()
-        {
-            _tags.Sort();
-            lstTags.Items.Clear();
-            foreach (string tag in _tags)
-            {
-                lstTags.Items.Add(tag);
-            }
-        }
-
-        private void btnGenerateCm_Click(object sender, EventArgs e)
+        protected void btnGenerateCm_Click(object sender, EventArgs e)
         {
             try
             {
@@ -404,7 +120,7 @@ namespace ALPOGalleryTool
                     };
                 }
                 TimeSpan ts_cmI = dtObsrvTime.Value - mostRecentPrimeMeridianTransit;
-                double cmI = (ts_cmI.TotalMinutes / CmI_Period) -1;
+                double cmI = (ts_cmI.TotalMinutes / CmI_Period) - 1;
                 cm_I = cmI.ToString("N0");
                 foreach (VenusDataSet.Venus_CMRow rw in _cmData)
                 {
@@ -446,46 +162,7 @@ namespace ALPOGalleryTool
             }
         }
 
-        private void LoadPhaseAndElng()
-        {
-            using (Venus_Phase_ElngTableAdapter ta = new Venus_Phase_ElngTableAdapter())
-            {
-                ta.Fill(_phaseElngData);
-            }
-        }
-
-        private void LoadCmData()
-        {
-            using (Venus_CMTableAdapter ta = new Venus_CMTableAdapter())
-            {
-                ta.Fill(_cmData);
-            }
-        }
-
-        private void btnApndTags_Click(object sender, EventArgs e)
-        {
-            string tmp = txtTags.Text + ",";
-            foreach (var item in lstTags.SelectedItems)
-            {
-                tmp += item + ",";
-            }
-            txtTags.Text = tmp.Substring(0, tmp.Length - 1);
-            lstTags.SelectedItems.Clear();
-        }
-
-        private void btnAddTags_Click(object sender, EventArgs e)
-        {
-            txtTags.Text = string.Empty;
-            string tmp = string.Empty;
-            foreach (var item in lstTags.SelectedItems)
-            {
-                tmp += item + ",";
-            }
-            txtTags.Text = tmp.Substring(0, tmp.Length - 1);
-            lstTags.SelectedItems.Clear();
-        }
-
-        private void btnGenName_Click(object sender, EventArgs e)
+        protected void btnGenName_Click(object sender, EventArgs e)
         {
             int i = Convert.ToInt32(TenthsMin.Value);
             string tenths = i > 0 ? "_" + i.ToString() : "";
@@ -495,33 +172,55 @@ namespace ALPOGalleryTool
                                String.Join("_", GetFilters());
         }
 
-        private bool IsValidName()
+        protected void btnGenSectRpt_Click(object sender, EventArgs e)
         {
-            string rgxDtTm = "^[0-9]{4}-[0-1]{1}[0-9]{1}-[0-3]{1}[0-9]{1}-[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}";
-            return Regex.IsMatch(lblFileName.Text, rgxDtTm);
-        }
-
-        private string[] GetTags()
-        {
-            List<string> result = new List<string>();
-            foreach (string tag in txtTags.Text.Split(','))
+            Cursor = Cursors.WaitCursor;
+            try
             {
-                result.Add(tag.Trim());
+                string exportFldr = Path.GetDirectoryName(_wrkFldr);
+                string trg = Path.Combine(exportFldr, "UploadReport.csv");
+                if (File.Exists(trg))
+                {
+                    File.Delete(trg);
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(@"Object,Obsrvr Init,File Added to Gallery, Link");
+
+                DirectoryInfo di = new DirectoryInfo(exportFldr);
+                FileInfo[] imgs = di.GetFiles();
+                foreach (FileInfo img in imgs)
+                {
+                    try
+                    {
+                        if (Path.GetExtension(img.Name) != ".csv" && Path.GetExtension(img.Name) != ".xlsx")
+                        {
+                            string fileNameNoExt = Path.GetFileNameWithoutExtension(img.Name);
+                            string[] parts = img.Name.Split('-');
+                            sb.AppendLine("Venus," + parts[4] + "," + img.Name + "," +
+                                          _dataSrvc.GetObsrvUrl(fileNameNoExt));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Could not process file {img.Name} for this report. {ex.Message}");
+                    }
+                }
+
+                File.WriteAllText(trg, sb.ToString());
+                MessageBox.Show(@"Report completed");
             }
-            foreach (var item in lstOtherFltr.SelectedItems)
+            catch (Exception ex)
             {
-                result.Add(item.ToString());
+                MessageBox.Show((ex.Message));
             }
-
-            return result.ToArray();
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
         }
 
-        private string GetUrl()
-        {
-            return Settings.Default.VenusUrl + "/" + lblFileName.Text;
-        }
-
-        private void btnProcess_Click(object sender, EventArgs e)
+        protected void btnProcess_Click(object sender, EventArgs e)
         {
             bool accepted = false;
             if (lblFileName.Text.EndsWith("-"))
@@ -626,31 +325,76 @@ namespace ALPOGalleryTool
             }
         }
 
-        private void UpdateTagList()
+        protected void btnRecalcDate_Click(object sender, EventArgs e)
         {
-            string[] currentTags = txtTags.Text.Split(',');
-            foreach (string tag in currentTags)
+            TrySetObsrvTimestamp();
+        }
+
+        protected void btnTrash_Click(object sender, EventArgs e)
+        {
+            _initDone = false;
+            string msg = Path.Combine(_wrkFldr, lstMsgs.Text);
+            File.Delete(msg);
+            lstMsgs.Items.Remove(lstMsgs.Text);
+            _initDone = true;
+        }
+
+        protected void ckOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckOverride.Checked) TrySetObserver();
+        }
+
+        protected void lblDateError_VisibleChanged(object sender, EventArgs e)
+        {
+            if (lblDateError.Visible)
             {
-                if (_tags.Contains(tag) == false &&
-                    !tag.Trim().StartsWith("CM") && !tag.Trim().StartsWith("Elng") && !tag.Trim().StartsWith("Phase"))
+                SoundPlayer player = new SoundPlayer(ALPOGalleryTool.Properties.Resources.alert_chime);
+                player.Play();
+            }
+        }
+
+        protected void lstAttachments_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_initDone)
+            {
+                try
                 {
-                    _tags.Add(tag);
+                    MemoryStream ms = new MemoryStream(_attachments[lstAttachments.Text].Data);
+                    imgObservation.Image = Image.FromStream(ms);
+                    imgObservation.Text = lstAttachments.Text;
+                    TenthsMin.Value = 0;
+                    //lstCardinal.SelectedIndex = -1;
+                    SetTagList();
+                    lblOversized.Visible = _attachments[lstAttachments.Text].Data.LongLength > 300000;
+                    lblOversized.Text = "Oversized: " + _attachments[lstAttachments.Text].Data.LongLength.ToString("N0");
+                    _tmpFileName = lstAttachments.Text;
+                    TrySetFilter();
+                    TrySetObsrvTimestamp();
+                    lblFileName.Text = String.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Loading Attachment", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private string[] GetFilters()
+        protected void lstMsgs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<string> result = new List<string>();
-            foreach (var item in lstFilters.SelectedItems)
+            if (_initDone)
             {
-                result.Add(item.ToString());
+                cmbObserver.SelectedIndex = -1;
+                cmbTelescopes.Items.Clear();
+                txtTags.Text = string.Empty;
+                txtSeeing.Text = "0";
+                txtTrnsp.Text = "0";
+                lstFilters.SelectedIndex = -1;
+                lstOtherFltr.SelectedIndex = -1;
+                LoadMsg();
             }
-
-            return result.ToArray();
         }
 
-        private void lstTags_DoubleClick(object sender, EventArgs e)
+        protected void lstTags_DoubleClick(object sender, EventArgs e)
         {
             string t = txtTags.Text.Trim();
             if (t.Length == 0)
@@ -665,75 +409,339 @@ namespace ALPOGalleryTool
             lstTags.SelectedIndex = -1;
         }
 
-        private void btnTrash_Click(object sender, EventArgs e)
+        private void FrmVenus_Shown(object sender, EventArgs e)
         {
-            _initDone = false;
-            string msg = Path.Combine(_wrkFldr, lstMsgs.Text);
-            File.Delete(msg);
-            lstMsgs.Items.Remove(lstMsgs.Text);
             _initDone = true;
+            this.WindowState = FormWindowState.Maximized;
         }
 
-        private void btnGenSectRpt_Click(object sender, EventArgs e)
+        private string GenerateFileName(string attachmentFileName)
         {
-            Cursor = Cursors.WaitCursor;
+            string name = Path.GetFileNameWithoutExtension(attachmentFileName);
+            string ext = Path.GetExtension(attachmentFileName);
+            cnt++;
+            return name + "_id" + cnt.ToString("00") + ext;
+        }
+
+        private string[] GetFilters()
+        {
+            List<string> result = new List<string>();
+            foreach (var item in lstFilters.SelectedItems)
+            {
+                result.Add(item.ToString());
+            }
+
+            return result.ToArray();
+        }
+
+        private string[] GetTags()
+        {
+            List<string> result = new List<string>();
+            foreach (string tag in txtTags.Text.Split(','))
+            {
+                result.Add(tag.Trim());
+            }
+            foreach (var item in lstOtherFltr.SelectedItems)
+            {
+                result.Add(item.ToString());
+            }
+
+            return result.ToArray();
+        }
+
+        private string GetUrl()
+        {
+            return Settings.Default.VenusUrl + "/" + lblFileName.Text;
+        }
+
+        private bool IsValidName()
+        {
+            string rgxDtTm = "^[0-9]{4}-[0-1]{1}[0-9]{1}-[0-3]{1}[0-9]{1}-[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}";
+            return Regex.IsMatch(lblFileName.Text, rgxDtTm);
+        }
+
+        private void LoadCmData()
+        {
+            using (Venus_CMTableAdapter ta = new Venus_CMTableAdapter())
+            {
+                ta.Fill(_cmData);
+            }
+        }
+
+        private void LoadFilters()
+        {
+            lstOtherFltr.Items.Clear();
+            lstFilters.Items.Clear();
+            lstFilters.Items.Add("CH4");
+            lstFilters.Items.Add("IR");
+            lstFilters.Items.Add("WL");
+            lstFilters.Items.Add("RGB");
+            lstFilters.Items.Add("R");
+            lstFilters.Items.Add("UV");
+            lstOtherFltr.Items.Add("IR-Block");
+            lstOtherFltr.Items.Add("UV-Block");
+            lstOtherFltr.Items.Add("UV-IR-Block");
+            lstOtherFltr.Items.Add("Wr15");
+            lstOtherFltr.Items.Add("Wr21");
+            lstOtherFltr.Items.Add("Wr47");
+
+        }
+
+        private void LoadMsg()
+        {
             try
             {
-                string exportFldr = Path.GetDirectoryName(_wrkFldr);
-                string trg = Path.Combine(exportFldr, "UploadReport.csv");
-                if (File.Exists(trg))
+                lstAttachments.Items.Clear();
+                string msgfile = Path.Combine(_wrkFldr, lstMsgs.Text);
+                Stream messageStream = File.Open(msgfile, FileMode.Open, FileAccess.Read);
+                OutlookStorage.Message message = new OutlookStorage.Message(messageStream);
+                messageStream.Close();
+                _rptAuthorEmail = message.From;
+                foreach (var attachment in message.Attachments)
                 {
-                    File.Delete(trg);
-                }
-
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine(@"Object,Obsrvr Init,File Added to Gallery, Link");
-
-                DirectoryInfo di = new DirectoryInfo(exportFldr);
-                FileInfo[] imgs = di.GetFiles();
-                foreach (FileInfo img in imgs)
-                {
-                    try
+                    AttachmentPoco tmp = new AttachmentPoco
                     {
-                        if (Path.GetExtension(img.Name) != ".csv" && Path.GetExtension(img.Name) != ".xlsx")
-                        {
-                            string fileNameNoExt = Path.GetFileNameWithoutExtension(img.Name);
-                            string[] parts = img.Name.Split('-');
-                            sb.AppendLine("Venus," + parts[4] + "," + img.Name + "," +
-                                          _dataSrvc.GetObsrvUrl(fileNameNoExt));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Could not process file {img.Name} for this report. {ex.Message}");
-                    }
+                        Data = attachment.Data,
+                        FileName = GenerateFileName(attachment.Filename)
+                    };
+                    lstAttachments.Items.Add(tmp.FileName);
+                    _attachments.Add(tmp.FileName, tmp);
                 }
-
-                File.WriteAllText(trg, sb.ToString());
-                MessageBox.Show(@"Report completed");
+                rtbNotes.Text = message.BodyText;
+                TrySetObserver();
+                message.Dispose();
             }
             catch (Exception ex)
             {
-                MessageBox.Show((ex.Message));
-            }
-            finally
-            {
-                Cursor = Cursors.Default;
+                MessageBox.Show(ex.Message);
             }
         }
 
-        private void lblDateError_VisibleChanged(object sender, EventArgs e)
+        private void LoadPhaseAndElng()
         {
-            if (lblDateError.Visible)
+            using (Venus_Phase_ElngTableAdapter ta = new Venus_Phase_ElngTableAdapter())
             {
-                SoundPlayer player = new SoundPlayer(ALPOGalleryTool.Properties.Resources.alert_chime);
-                player.Play();
+                ta.Fill(_phaseElngData);
             }
         }
 
-        private void ckOverride_CheckedChanged(object sender, EventArgs e)
+        private void LoadReports()
         {
-            if (ckOverride.Checked) TrySetObserver();
+            lstMsgs.Items.Clear();
+            DirectoryInfo di = new DirectoryInfo(_wrkFldr);
+            FileInfo[] imgs = di.GetFiles();
+            foreach (FileInfo img in imgs)
+            {
+                lstMsgs.Items.Add(img.Name);
+                _imgFiles.Add(img.Name, img.FullName);
+            }
+            _attachments.Clear();
+        }
+
+        private void LoadTags()
+        {
+            lstTags.Items.Clear();
+            _tags = _dataSrvc.GetRecentTags("Venus")
+                .Where(t => t.StartsWith("Elng") == false && t.StartsWith("Phase") == false).ToList();
+            List<string> _persistentTags = _dataSrvc.GetPersistentTags("Venus").ToList();
+            List<string> allTags = _tags.Union(_persistentTags).ToList();
+            allTags.Sort();
+            _tags = allTags;
+            lstTags.Items.AddRange(allTags.ToArray());
+        }
+
+        private void LoadTelescopes()
+        {
+            _telescopes.Clear();
+            _telescopes = _dataSrvc.GetAllTelescopes().ToList();
+        }
+
+        private void LoadUsers()
+        {
+            cmbObserver.Items.Clear();
+            _observers = _dataSrvc.GetAllObservers().OrderBy(o => o.Initials).ToList();
+            if (_observers.Any())
+            {
+                var initials = _observers.Select(o => o.Initials);
+                foreach (string initial in initials)
+                {
+                    cmbObserver.Items.Add(initial);
+                }
+            }
+        }
+
+        private List<string> PrepTelescopeList(List<string> lst)
+        {
+            lst = lst.Distinct(
+                StringComparer.CurrentCultureIgnoreCase).ToList();
+            lst.Sort();
+            lst.Insert(0, "Undetermined");
+            return lst;
+        }
+
+        private void SetTagList()
+        {
+            _tags.Sort();
+            lstTags.Items.Clear();
+            foreach (string tag in _tags)
+            {
+                lstTags.Items.Add(tag);
+            }
+        }
+
+        private void TrySetFilter()
+        {
+            if (lstAttachments.Text.ToUpper().Contains("-WL-") ||
+                lstAttachments.Text.ToUpper().Contains("-WL_") ||
+                lstAttachments.Text.ToUpper().Contains("_WL_") ||
+                                lstAttachments.Text.ToUpper().Contains("-L_") ||
+                lstAttachments.Text.ToUpper().Contains("_L_") ||
+                lstAttachments.Text.ToUpper().Contains("-L-"))
+            {
+                lstFilters.ClearSelected();
+                lstFilters.SetSelected(lstFilters.FindString("WL"), true);
+            }
+            if (lstAttachments.Text.ToUpper().Contains("-IR-") ||
+                lstAttachments.Text.ToUpper().Contains("_IR"))
+            {
+                lstFilters.ClearSelected();
+                lstFilters.SetSelected(lstFilters.FindString("IR"), true);
+            }
+            if (lstAttachments.Text.ToUpper().Contains("-UV-") ||
+                lstAttachments.Text.ToUpper().Contains("-UV_") ||
+                lstAttachments.Text.ToUpper().Contains("_UV_"))
+            {
+                lstFilters.ClearSelected();
+                lstFilters.SetSelected(lstFilters.FindString("UV"), true);
+            }
+        }
+
+        private void TrySetObserver()
+        {
+            cmbTelescopes.Items.Clear();
+            cmbTelescopes.Text = string.Empty;
+
+            IObserver obsrvr = null;
+            if (ckOverride.Checked)
+            {
+                obsrvr = _observers.FirstOrDefault(o => o.Initials == cmbObserver.Text);
+            }
+            else
+            {
+                obsrvr = _observers.FirstOrDefault(o => o.EmailName.ToLower() == _rptAuthorEmail.ToLower());
+            }
+            if (obsrvr != null)
+            {
+                cmbObserver.Text = obsrvr.Initials;
+                lblObsrvName.Text = (obsrvr.FirstName + " " + obsrvr.LastName).Trim();
+                //btnProfile.Visible = HasProfile(obsrvr.Initials);
+                var scopes = _telescopes.Where(s => s.Initials == obsrvr.Initials);
+                if (scopes.Any())
+                {
+                    List<string> lst = new List<string>();
+                    foreach (ITelescope scope in scopes)
+                    {
+                        string focalRatio = @"f/" + scope.FocalRatio;
+                        string focalLength = @"FL " + scope.FocalLength;
+                        string suffix = "";
+                        if (scope.FocalLength > -1 || scope.FocalRatio > -1)
+                        {
+                            suffix = scope.FocalLength > -1 ? focalLength : focalRatio;
+                            lst.Add((scope.ScopeType + @" " + scope.Aperture + @"mm " + suffix).Trim());
+                        }
+                        else
+                        {
+                            lst.Add((scope.ScopeType + @" " + scope.Aperture + @"mm " + suffix).Trim());
+                        }
+                    }
+
+                    lst = PrepTelescopeList(lst);
+                    cmbTelescopes.Items.Clear();
+                    cmbTelescopes.Items.AddRange(lst.ToArray());
+                    cmbTelescopes.SelectedIndex = -1;
+                }
+                else
+                {
+                    cmbTelescopes.Items.Clear();
+                }
+            }
+            if (!cmbTelescopes.Items.Contains("Undetermined")) cmbTelescopes.Items.Add("Undetermined");
+        }
+
+        private void TrySetObsrvTimestamp()
+        {
+            lblDateError.Visible = false;
+            if (string.IsNullOrEmpty(_tmpFileName))
+            {
+                lblDateError.Visible = true;
+                return;
+            }
+            else
+            {
+                ObsrvDate.CalendarForeColor = Color.White;
+                TenthsMin.Value = 0;
+
+                while (Int32.TryParse(_tmpFileName.Substring(0, 1), out int tmp) == false)
+                {
+                    _tmpFileName = _tmpFileName.Substring(1);
+                }
+
+                //Pattern: ddMMyyyy hhmm **********************************************
+                if (cmbObserver.Text == @"ClyFstr")
+                {
+                    string tmp = _tmpFileName.ToUpper().Replace("VENUS ", "");
+                    string fileDT = tmp.Substring(4, 4) + "-" +
+                                    tmp.Substring(2, 2) + "-" +
+                                    tmp.Substring(0, 2) + " " +
+                                          tmp.Substring(11, 2) + ":" +
+                                          tmp.Substring(13, 2);
+                    if (DateTime.TryParse(fileDT, out DateTime dtm))
+                    {
+                        ObsrvDate.Value = dtm;
+                        dtObsrvTime.Value = dtm;
+                    }
+                    return;
+                }
+
+                string tmpFileNameForDate = _tmpFileName.Replace("[", "_").Replace("]", "");
+                string fileDateTime = tmpFileNameForDate.Substring(0, 10) + " " +
+                                      tmpFileNameForDate.Substring(11, 2) + ":" +
+                                      tmpFileNameForDate.Substring(13, 2);
+                if (fileDateTime.Substring(0, 10).Contains("_"))
+                {
+                    fileDateTime = fileDateTime.Substring(0, 10).Replace("_", "-") + fileDateTime.Substring(10);
+                }
+                if (DateTime.TryParse(fileDateTime, out DateTime dt))
+                {
+                    ObsrvDate.Value = dt;
+                    dtObsrvTime.Value = dt;
+                }
+                else
+                {
+                    lblDateError.Visible = true;
+                }
+
+                if (tmpFileNameForDate.IndexOf("_", StringComparison.Ordinal) == 15)
+                {
+                    if (int.TryParse(tmpFileNameForDate.Substring(16, 1), out int i))
+                    {
+                        TenthsMin.Value = i;
+                    }
+                }
+            }
+        }
+
+        private void UpdateTagList()
+        {
+            string[] currentTags = txtTags.Text.Split(',');
+            foreach (string tag in currentTags)
+            {
+                if (_tags.Contains(tag) == false &&
+                    !tag.Trim().StartsWith("CM") && !tag.Trim().StartsWith("Elng") && !tag.Trim().StartsWith("Phase"))
+                {
+                    _tags.Add(tag);
+                }
+            }
         }
     }
 

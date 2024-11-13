@@ -36,5 +36,6 @@ namespace ALPOGalleryTool.Interfaces
         IEnumerable<MongoObsrvProfile> GetProfileBySectAndInit(string section, string initials);
         IEnumerable<string> GetRecentTags(string section);
         IEnumerable<string> GetRecentTags(string section, int lookBack);
+        IEnumerable<string> GetRecentTagsByObsrvDt(string section, int lookBack, DateTime obsrvDt);
     }
 }

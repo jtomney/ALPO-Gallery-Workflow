@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -198,6 +199,7 @@ namespace ALPOGalleryTool
                     TrySetFilter();
                     TrySetObsrvTimestamp();
                     lblFileName.Text = String.Empty;
+                    LoadTags();
                 }
                 catch (Exception ex)
                 {
@@ -286,7 +288,7 @@ namespace ALPOGalleryTool
                                dtObsrvTime.Value.ToString("HHmm") + tenths + "-" +
                                cmbObserver.Text + "-" +
                                String.Join("_", GetFilters());
-            if(cmbObserver.Text.Trim() == "")
+            if (cmbObserver.Text.Trim() == "")
             {
                 MessageBox.Show("The observer must be selected from the drop down list.", "Error");
                 return;
@@ -355,6 +357,7 @@ namespace ALPOGalleryTool
 
         private void btnParseFileForDate_Click(object sender, EventArgs e)
         {
+            lblBadDate.Visible = false;
             if (string.IsNullOrEmpty(_tmpFileName))
             {
                 ObsrvDate.CalendarForeColor = Color.Red;
@@ -383,6 +386,31 @@ namespace ALPOGalleryTool
                         ObsrvDate.Value = output;
                         dtObsrvTime.Value = output;
                         TenthsMin.Value = output.Second / 6;
+                    }
+                    return;
+                }
+
+                if (cmbObserver.Text == @"LgiMrrn")
+                {
+                    string fileDT = _tmpFileName.Replace("_", "-");
+                                    fileDT = fileDT.Substring(0, 10) + " " +
+                                    fileDT.Substring(11, 2) + ":" +
+                                    fileDT.Substring(13, 2);
+                    if (DateTime.TryParse(fileDT, out DateTime dtm))
+                    {
+                        ObsrvDate.Value = dtm;
+                        dtObsrvTime.Value = dtm;
+                    }
+                    else
+                    {
+                        lblBadDate.Visible = true;
+
+                        return;
+                    }
+
+                    if (int.TryParse(_tmpFileName.Substring(17, 2), out int secs))
+                    {
+                        TenthsMin.Value = secs / 6;
                     }
                     return;
                 }
@@ -514,8 +542,8 @@ namespace ALPOGalleryTool
             }
             finally
             {
-                if(ObsrvDate.Value> DateTime.Now)
-                    MessageBox.Show("The observation date is in the future.  Please correct it.","Invalid Observation Date", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ObsrvDate.Value > DateTime.Now)
+                    MessageBox.Show("The observation date is in the future.  Please correct it.", "Invalid Observation Date", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -545,7 +573,7 @@ namespace ALPOGalleryTool
                         }
                         catch (Exception)
                         {   //ToDo: Feedback to user?
-                        }                        
+                        }
                     }
                     for (int i = 0; i < profile.Filters.Length; i++)
                     {
@@ -650,7 +678,7 @@ namespace ALPOGalleryTool
 
         private void GetRecentFileNames()
         {
-            var solObsrvtns = _dataSrvc.GetObsrvtnsByDateRange(DateTime.Today.AddMonths(-1), DateTime.Today.AddDays(1)).Where(o => o.Section == "Solar");
+            var solObsrvtns = _dataSrvc.GetObsrvtnsByDateRange(DateTime.Today.AddMonths(-2), DateTime.Today.AddDays(1)).Where(o => o.Section == "Solar");
             _recentObservations = solObsrvtns.ToList();
             _recentFileNames = solObsrvtns.Select(o => o.FileName).ToList();
         }
@@ -707,6 +735,7 @@ namespace ALPOGalleryTool
             lstFilters.Items.Clear();
             lstFilters.Items.Add("CaK");
             lstFilters.Items.Add("Ha");
+            lstFilters.Items.Add("IR");
             lstFilters.Items.Add("O-III");
             lstFilters.Items.Add("WL");
             lstOtherFltr.Items.Add("IR-Block");
@@ -762,7 +791,8 @@ namespace ALPOGalleryTool
         private void LoadTags()
         {
             lstTags.Items.Clear();
-            _tags = _dataSrvc.GetRecentTags("Solar").Where(t => t.StartsWith("Location:") == false).ToList(); ;
+            //_tags = _dataSrvc.GetRecentTags("Solar").Where(t => t.StartsWith("Location:") == false).ToList();
+            _tags = _dataSrvc.GetRecentTagsByObsrvDt("Solar", 7, ObsrvDate.Value).Where(t => t.StartsWith("Location:") == false).ToList();
             List<string> _persistentTags = _dataSrvc.GetPersistentTags("Solar").ToList();
             List<string> allTags = _tags.Union(_persistentTags).ToList();
             allTags.Sort();
@@ -849,6 +879,8 @@ namespace ALPOGalleryTool
                 lstAttachments.Text.ToUpper().Contains("-WL_") ||
                 lstAttachments.Text.ToUpper().Contains("_WL_") ||
                 lstAttachments.Text.ToUpper().Contains("-540NM-") ||
+                lstAttachments.Text.ToUpper().Contains("WHITE_LIGHT") ||
+                lstAttachments.Text.ToUpper().Contains("WHITE-LIGHT") ||
                 lstAttachments.Text.ToUpper().Contains("WHITE LIGHT"))
             {
                 lstFilters.ClearSelected();
@@ -987,6 +1019,44 @@ namespace ALPOGalleryTool
             if (ckOverride.Checked)
             {
                 TrySetObserver();
+            }
+        }
+
+        private void btnShowSpectrum_Click(object sender, EventArgs e)
+        {
+            ModalSpectrum modal = new ModalSpectrum();
+            modal.ShowDialog();
+            modal.Dispose();
+        }
+
+        private void lstFilters_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstFilters.Text == "Other")
+            {
+                ModalInput modal = new ModalInput("Provide Filter Name");
+                if (modal.ShowDialog() == DialogResult.OK)
+                {
+                    lstFilters.SelectedIndex = -1;
+                    lstFilters.Items.Add(modal.Answer);
+                    lstFilters.SetSelected(lstFilters.FindString(modal.Answer), true);
+                }
+            }
+        }
+
+        private void lblFileName_DoubleClick(object sender, EventArgs e)
+        {
+            using (ModalDisplay modal = new ModalDisplay(lblFileName.Text))
+            {
+                modal.ShowDialog();
+            }
+        }
+
+        private void lblBadDate_VisibleChanged(object sender, EventArgs e)
+        {
+           if(!lblBadDate.Visible)
+            {
+                SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\Windows Notify Calendar.wav");
+                simpleSound.Play();
             }
         }
     }

@@ -42,6 +42,7 @@ namespace ALPOGalleryTool
             this.eclipseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.utilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aREntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -126,7 +127,8 @@ namespace ALPOGalleryTool
             // utilsToolStripMenuItem
             // 
             this.utilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aREntryToolStripMenuItem});
+            this.aREntryToolStripMenuItem,
+            this.checkURLToolStripMenuItem});
             this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
             this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
             this.utilsToolStripMenuItem.Text = "Utils";
@@ -134,9 +136,15 @@ namespace ALPOGalleryTool
             // aREntryToolStripMenuItem
             // 
             this.aREntryToolStripMenuItem.Name = "aREntryToolStripMenuItem";
-            this.aREntryToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.aREntryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aREntryToolStripMenuItem.Text = "AR Entry";
             this.aREntryToolStripMenuItem.Click += new System.EventHandler(this.aREntryToolStripMenuItem_Click);
+            // 
+            // checkURLToolStripMenuItem
+            // 
+            this.checkURLToolStripMenuItem.Name = "checkURLToolStripMenuItem";
+            this.checkURLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkURLToolStripMenuItem.Text = "Check URL";
             // 
             // FrmMenu
             // 
@@ -171,5 +179,6 @@ namespace ALPOGalleryTool
         private System.Windows.Forms.ToolStripMenuItem eclipseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem utilsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aREntryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkURLToolStripMenuItem;
     }
 }

@@ -30,6 +30,9 @@
         {
             this.tabPlanets = new System.Windows.Forms.TabControl();
             this.tabSolar = new System.Windows.Forms.TabPage();
+            this.txtOffset3 = new System.Windows.Forms.TextBox();
+            this.txtOffset2 = new System.Windows.Forms.TextBox();
+            this.txtOffset1 = new System.Windows.Forms.TextBox();
             this.ckOverride = new System.Windows.Forms.CheckBox();
             this.cmbTelescopes = new System.Windows.Forms.ComboBox();
             this.lstTags = new System.Windows.Forms.ListBox();
@@ -80,9 +83,6 @@
             this.dtEnd = new System.Windows.Forms.DateTimePicker();
             this.dtStart = new System.Windows.Forms.DateTimePicker();
             this.fldrDlg = new System.Windows.Forms.FolderBrowserDialog();
-            this.txtOffset1 = new System.Windows.Forms.TextBox();
-            this.txtOffset2 = new System.Windows.Forms.TextBox();
-            this.txtOffset3 = new System.Windows.Forms.TextBox();
             this.tabPlanets.SuspendLayout();
             this.tabSolar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnImgSelFolder)).BeginInit();
@@ -158,6 +158,36 @@
             this.tabSolar.Size = new System.Drawing.Size(1343, 719);
             this.tabSolar.TabIndex = 0;
             this.tabSolar.Text = "Solar";
+            // 
+            // txtOffset3
+            // 
+            this.txtOffset3.Location = new System.Drawing.Point(429, 435);
+            this.txtOffset3.Name = "txtOffset3";
+            this.txtOffset3.Size = new System.Drawing.Size(28, 24);
+            this.txtOffset3.TabIndex = 44;
+            this.txtOffset3.Text = "0";
+            this.txtOffset3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtOffset3.Visible = false;
+            // 
+            // txtOffset2
+            // 
+            this.txtOffset2.Location = new System.Drawing.Point(391, 435);
+            this.txtOffset2.Name = "txtOffset2";
+            this.txtOffset2.Size = new System.Drawing.Size(28, 24);
+            this.txtOffset2.TabIndex = 43;
+            this.txtOffset2.Text = "0";
+            this.txtOffset2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtOffset2.Visible = false;
+            // 
+            // txtOffset1
+            // 
+            this.txtOffset1.Location = new System.Drawing.Point(354, 435);
+            this.txtOffset1.Name = "txtOffset1";
+            this.txtOffset1.Size = new System.Drawing.Size(28, 24);
+            this.txtOffset1.TabIndex = 42;
+            this.txtOffset1.Text = "0";
+            this.txtOffset1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtOffset1.Visible = false;
             // 
             // ckOverride
             // 
@@ -393,7 +423,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(17, 592);
+            this.label5.Location = new System.Drawing.Point(134, 465);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(48, 18);
             this.label5.TabIndex = 18;
@@ -401,9 +431,9 @@
             // 
             // rtbNotes
             // 
-            this.rtbNotes.Location = new System.Drawing.Point(82, 589);
+            this.rtbNotes.Location = new System.Drawing.Point(137, 493);
             this.rtbNotes.Name = "rtbNotes";
-            this.rtbNotes.Size = new System.Drawing.Size(300, 64);
+            this.rtbNotes.Size = new System.Drawing.Size(282, 152);
             this.rtbNotes.TabIndex = 17;
             this.rtbNotes.Text = "";
             // 
@@ -411,10 +441,10 @@
             // 
             this.lstFilters.FormattingEnabled = true;
             this.lstFilters.ItemHeight = 17;
-            this.lstFilters.Location = new System.Drawing.Point(82, 370);
+            this.lstFilters.Location = new System.Drawing.Point(20, 391);
             this.lstFilters.Name = "lstFilters";
             this.lstFilters.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.lstFilters.Size = new System.Drawing.Size(147, 191);
+            this.lstFilters.Size = new System.Drawing.Size(108, 242);
             this.lstFilters.TabIndex = 16;
             // 
             // label4
@@ -654,36 +684,6 @@
             this.dtStart.Name = "dtStart";
             this.dtStart.Size = new System.Drawing.Size(142, 24);
             this.dtStart.TabIndex = 0;
-            // 
-            // txtOffset1
-            // 
-            this.txtOffset1.Location = new System.Drawing.Point(354, 435);
-            this.txtOffset1.Name = "txtOffset1";
-            this.txtOffset1.Size = new System.Drawing.Size(28, 24);
-            this.txtOffset1.TabIndex = 42;
-            this.txtOffset1.Text = "0";
-            this.txtOffset1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtOffset1.Visible = false;
-            // 
-            // txtOffset2
-            // 
-            this.txtOffset2.Location = new System.Drawing.Point(391, 435);
-            this.txtOffset2.Name = "txtOffset2";
-            this.txtOffset2.Size = new System.Drawing.Size(28, 24);
-            this.txtOffset2.TabIndex = 43;
-            this.txtOffset2.Text = "0";
-            this.txtOffset2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtOffset2.Visible = false;
-            // 
-            // txtOffset3
-            // 
-            this.txtOffset3.Location = new System.Drawing.Point(429, 435);
-            this.txtOffset3.Name = "txtOffset3";
-            this.txtOffset3.Size = new System.Drawing.Size(28, 24);
-            this.txtOffset3.TabIndex = 44;
-            this.txtOffset3.Text = "0";
-            this.txtOffset3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtOffset3.Visible = false;
             // 
             // FrmMain
             // 

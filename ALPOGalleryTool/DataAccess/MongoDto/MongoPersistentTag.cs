@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ALPOGalleryTool.DataAccess.MongoDto
 {
+    [BsonIgnoreExtraElements]
     public class MongoPersistentTag
     {
         [BsonId]
@@ -13,5 +14,8 @@ namespace ALPOGalleryTool.DataAccess.MongoDto
 
         [BsonElement("tag")]
         public string Tag { get; set; }
+
+        [BsonElement("eventType")]
+        public string EventType { get; set; }
     }
 }

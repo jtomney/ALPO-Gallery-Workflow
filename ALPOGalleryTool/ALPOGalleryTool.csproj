@@ -61,15 +61,17 @@
     <Compile Include="DataAccess\MongoDataSrvc.cs" />
     <Compile Include="DataAccess\MongoDto\MongoCmTransit.cs" />
     <Compile Include="DataAccess\MongoDto\MongoCrRtn.cs" />
+    <Compile Include="DataAccess\MongoDto\MongoEclipseDto.cs" />
     <Compile Include="DataAccess\MongoDto\MongoLongitude.cs" />
     <Compile Include="DataAccess\MongoDto\MongoPersistentTag.cs" />
     <Compile Include="DataAccess\MongoDto\MongoMarsObservation.cs" />
     <Compile Include="DataAccess\MongoDto\MongoSolarObservation.cs" />
+    <Compile Include="DataAccess\MongoEclipseDataSrvc.cs" />
     <Compile Include="DataAccess\MongoObsrvProfile.cs" />
-    <Compile Include="DataAccess\SaturnDataSet.Designer.cs">
+    <Compile Include="DataAccess\SaturnCmDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SaturnDataSet.xsd</DependentUpon>
+      <DependentUpon>SaturnCmDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="DataAccess\SqlSrvDataSrv.cs" />
     <Compile Include="DataAccess\SqlSrvDto\ActvRgnDateDto.cs" />
@@ -83,6 +85,12 @@
     </Compile>
     <Compile Include="FrmActvRgnInsrt.Designer.cs">
       <DependentUpon>FrmActvRgnInsrt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmChkUrl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmChkUrl.Designer.cs">
+      <DependentUpon>FrmChkUrl.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmEclipse.cs">
       <SubType>Form</SubType>
@@ -121,6 +129,7 @@
       <DependentUpon>FrmVenus.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IActvRgnDataSrvc.cs" />
+    <Compile Include="Interfaces\IEclipseDataSrvc.cs" />
     <Compile Include="Interfaces\ITelescope.cs" />
     <Compile Include="DataAccess\MongoDto\MongoObservation.cs" />
     <Compile Include="DataAccess\MongoDto\MongoObserver.cs" />
@@ -148,6 +157,18 @@
     <Compile Include="ModalAddTelescope.Designer.cs">
       <DependentUpon>ModalAddTelescope.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalDisplay.Designer.cs">
+      <DependentUpon>ModalDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalInput.Designer.cs">
+      <DependentUpon>ModalInput.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModalResize.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +181,12 @@
     <Compile Include="ModalSelectProfile.Designer.cs">
       <DependentUpon>ModalSelectProfile.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalSpectrum.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalSpectrum.Designer.cs">
+      <DependentUpon>ModalSpectrum.cs</DependentUpon>
+    </Compile>
     <Compile Include="OutlookDataObject.cs" />
     <Compile Include="OutlookStorage.cs" />
     <Compile Include="Program.cs" />
@@ -167,6 +194,9 @@
     <Compile Include="SaturnCentralMeridian.cs" />
     <EmbeddedResource Include="FrmActvRgnInsrt.resx">
       <DependentUpon>FrmActvRgnInsrt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmChkUrl.resx">
+      <DependentUpon>FrmChkUrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmEclipse.resx">
       <DependentUpon>FrmEclipse.cs</DependentUpon>
@@ -195,11 +225,20 @@
     <EmbeddedResource Include="ModalAddTelescope.resx">
       <DependentUpon>ModalAddTelescope.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ModalDisplay.resx">
+      <DependentUpon>ModalDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalInput.resx">
+      <DependentUpon>ModalInput.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ModalResize.resx">
       <DependentUpon>ModalResize.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModalSelectProfile.resx">
       <DependentUpon>ModalSelectProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalSpectrum.resx">
+      <DependentUpon>ModalSpectrum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -211,16 +250,16 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="DataAccess\SaturnDataSet.xsc">
-      <DependentUpon>SaturnDataSet.xsd</DependentUpon>
+    <None Include="DataAccess\SaturnCmDataSet.xsc">
+      <DependentUpon>SaturnCmDataSet.xsd</DependentUpon>
     </None>
-    <None Include="DataAccess\SaturnDataSet.xsd">
+    <None Include="DataAccess\SaturnCmDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>SaturnDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>SaturnCmDataSet.Designer.cs</LastGenOutput>
     </None>
-    <None Include="DataAccess\SaturnDataSet.xss">
-      <DependentUpon>SaturnDataSet.xsd</DependentUpon>
+    <None Include="DataAccess\SaturnCmDataSet.xss">
+      <DependentUpon>SaturnCmDataSet.xsd</DependentUpon>
     </None>
     <None Include="DataAccess\VenusDataSet.xsc">
       <DependentUpon>VenusDataSet.xsd</DependentUpon>
@@ -269,6 +308,9 @@
     <Content Include="lib\Cyotek.Windows.Forms.ImageBox.dll" />
     <Content Include="lib\Cyotek.Windows.Forms.ImageBox.pdb" />
     <Content Include="FutureTasks.txt" />
+    <None Include="Resources\PDF.jpg" />
+    <None Include="Resources\Spectrum.jpg" />
+    <None Include="Resources\Spectrum.png" />
     <None Include="Resources\alert-chime.wav" />
     <None Include="Resources\create_map_icon.png" />
     <None Include="Resources\6777308_blank_create_new_icon.png" />

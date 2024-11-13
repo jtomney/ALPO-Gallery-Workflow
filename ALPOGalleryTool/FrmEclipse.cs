@@ -1,18 +1,15 @@
 ﻿using ALPOGalleryTool.DataAccess.MongoDto;
 using ALPOGalleryTool.Interfaces;
 using ALPOGalleryTool.Properties;
-using ImageProcessor.Imaging.Colors;
 using iwantedue;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ALPOGalleryTool
@@ -20,6 +17,7 @@ namespace ALPOGalleryTool
     public partial class FrmEclipse : Form
     {
         private string _wrkFldr = string.Empty;
+        private string _outputFldr;
         private Dictionary<string, string> _imgFiles = new Dictionary<string, string>();
         private Dictionary<string, AttachmentPoco> _attachments = new Dictionary<string, AttachmentPoco>();
         private bool _initDone = false;
@@ -29,52 +27,93 @@ namespace ALPOGalleryTool
         private List<IObserver> _observers = new List<IObserver>();
         private List<string> _tags = new List<string>();
         private List<ITelescope> _telescopes = new List<ITelescope>();
+        private readonly IEclipseDataSrvc _eclipseDataSrvc;
         private readonly IDataSrvc _dataSrvc;
         private Stack<string> _poppedTags = new Stack<string>();
         private Stack<string> _priorTags = new Stack<string>();
         private List<string> _recentFileNames = new List<string>();
-        private string _eclipseTarget = @"Lunar-Eclipse";
-        private string _eclipseType = @"Partial-Lunar-Eclipse";
-        private string _eclipseDtTm = @"2023-10-18";
+        private string _eclipseTarget = @"Solar-Eclipse";
+        private string _eclipseType = @"Total-Solar-Eclipse";
+        private string _eclipseDtTm = @"2024-04-08";
+        private Dictionary<string, string> _dictEclipseRoster = new Dictionary<string, string>();
+        private bool _isPdfRpt;
+        private bool _usingAdHocFile;
+        private string _adHocFile;
 
-        public FrmEclipse(IDataSrvc dataSrvc)
+        public FrmEclipse(IEclipseDataSrvc eclipseDataSrvc, IDataSrvc dataSrvc)
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             _wrkFldr = Settings.Default.EclipseStaged;
+            _outputFldr = "";
+            _eclipseDataSrvc = eclipseDataSrvc;
             _dataSrvc = dataSrvc;
             LoadReports();
             LoadUsers();
             LoadFilters();
             LoadTelescopes();
             LoadTags();
+            LoadEclipseRoster();
+            lblTimestampErr.Text = string.Empty;
+        }
+
+        private void LoadEclipseRoster()
+        {
+            _dictEclipseRoster.Clear();
+            cmbEclipse.Items.Clear();
+            _dictEclipseRoster.Add("2023-10-14 (ASE)", "Solar-Eclipse/Annular-Solar-Eclipse/2023-10-14");
+            _dictEclipseRoster.Add("2023-10-28 (PLE)", "Lunar-Eclipse/Partial-Lunar-Eclipse/2023-10-28-Partial-Lunar-Eclipse");
+            _dictEclipseRoster.Add("2024-03-25 (PLE)", "Lunar-Eclipse/Partial-Lunar-Eclipse/2024-03-25-Partial-Lunar-Eclipse");
+            _dictEclipseRoster.Add("2024-04-08 (TSE)", "Solar-Eclipse/Total-Solar-Eclipse/2024-04-08");
+            _dictEclipseRoster.Add("2024-09-18 (PLE)", "Lunar-Eclipse/Partial-Lunar-Eclipse/2024-09-18-Partial-Lunar-Eclipse");
+
+            foreach (string item in _dictEclipseRoster.Keys)
+            {
+                cmbEclipse.Items.Add(item);
+            }
         }
 
         private void LoadFilters()
         {
             lstOtherFltr.Items.Clear();
             lstFilters.Items.Clear();
-            lstFilters.Items.Add("CaK");
-            lstFilters.Items.Add("Ha");
             lstFilters.Items.Add("ND");
             lstFilters.Items.Add("WL");
+            lstFilters.Items.Add("Mylar");
+            lstFilters.Items.Add("Glass");
+            lstFilters.Items.Add("CaK");
+            lstFilters.Items.Add("Ha");
+            lstFilters.Items.Add("NA");
+            lstOtherFltr.Items.Add("Baader");
+            lstOtherFltr.Items.Add("Orion");
+            lstOtherFltr.Items.Add("Seymour");
+            lstOtherFltr.Items.Add("Thousand Oaks");
             lstOtherFltr.Items.Add("IR-Block");
             lstOtherFltr.Items.Add("UV-Block");
             lstOtherFltr.Items.Add("UV-IR-Block");
-            lstOtherFltr.Items.Add("Thousand Oaks");
-            lstFilters.Items.Add("NA");
-            lstFilters.Items.Add("Other");
+            lstOtherFltr.Items.Add("Other");
         }
 
         private void LoadTags()
         {
             lstTags.Items.Clear();
-            _tags = _dataSrvc.GetRecentTags("Eclipse").ToList();
-            List<string> _persistentTags = _dataSrvc.GetPersistentTags("Eclipse").ToList();
+            string eclipseType = DetermineEclispeType();
+            _tags = _dataSrvc.GetRecentTags("Eclipse", 60).ToList();
+            List<string> _persistentTags = _eclipseDataSrvc.GetPersistentTags(eclipseType).ToList();
             List<string> allTags = _tags.Union(_persistentTags).ToList();
             allTags.Sort();
             _tags = allTags;
             lstTags.Items.AddRange(allTags.ToArray());
+        }
+
+        private string DetermineEclispeType()
+        {
+            string result = "Solar";
+            if (cmbEclipse.Text.Contains("(PLE)") || cmbEclipse.Text.Contains("(TLE)"))
+            {
+                result = "Lunar";
+            }
+            return result;
         }
 
         private void LoadReports()
@@ -94,6 +133,7 @@ namespace ALPOGalleryTool
         {
             if (_initDone)
             {
+                ResetFields();
                 cmbObserver.SelectedIndex = -1;
                 cmbTelescopes.Items.Clear();
                 txtTags.Text = string.Empty;
@@ -230,7 +270,7 @@ namespace ALPOGalleryTool
 
         private void FrmEclipse_Shown(object sender, EventArgs e)
         {
-            _initDone= true;
+            _initDone = true;
         }
 
         private void lstAttachments_SelectedIndexChanged(object sender, EventArgs e)
@@ -242,7 +282,7 @@ namespace ALPOGalleryTool
                     MemoryStream ms = new MemoryStream(_attachments[lstAttachments.Text].Data);
                     imgObservation.Image = Image.FromStream(ms);
                     imgObservation.Text = lstAttachments.Text;
-                    TenthsMin.Value = 0;
+                    //TenthsMin.Value = 0;
                     SetTagList();
                     lblOversized.Visible = _attachments[lstAttachments.Text].Data.LongLength > 300000;
                     lblOversized.Text = "Oversized: " + _attachments[lstAttachments.Text].Data.LongLength.ToString("N0");
@@ -269,6 +309,9 @@ namespace ALPOGalleryTool
 
         private void btnParseFileForDate_Click(object sender, EventArgs e)
         {
+            DateTime result = DateTime.MinValue;
+            lblTimestampErr.Text = string.Empty;
+            lblTimestampErr.Visible = false;
             if (string.IsNullOrEmpty(_tmpFileName))
             {
                 ObsrvDate.CalendarForeColor = Color.Red;
@@ -277,45 +320,69 @@ namespace ALPOGalleryTool
             else
             {
                 ObsrvDate.CalendarForeColor = Color.White;
-                TenthsMin.Value = 0;
+                //TenthsMin.Value = 0;
                 while (Int32.TryParse(_tmpFileName.Substring(0, 1), out int tmp) == false)
                 {
                     _tmpFileName = _tmpFileName.Substring(1);
                 }
-                string tmpFileNameForDate = _tmpFileName.Replace("[", "_").Replace("]", "");
+                string tmpFileNameForDate = _tmpFileName;
                 string fileDateTime = tmpFileNameForDate.Substring(0, 10) + " " +
                                       tmpFileNameForDate.Substring(11, 2) + ":" +
-                                      tmpFileNameForDate.Substring(13, 2);
-                fileDateTime = fileDateTime.Replace("_", "-");
+                                      tmpFileNameForDate.Substring(13, 2) + ":" +
+                                      tmpFileNameForDate.Substring(15, 2);
                 if (DateTime.TryParse(fileDateTime, out DateTime dt))
                 {
                     ObsrvDate.Value = dt;
                     dtObsrvTime.Value = dt;
                     grpObsrvtnTimestamp.BackColor = Color.Transparent;
                     grpObsrvtnTimestamp.ForeColor = Color.White;
+                    result = dt;
                 }
                 else
                 {
-                    grpObsrvtnTimestamp.BackColor = Color.Yellow;
-                    grpObsrvtnTimestamp.ForeColor = Color.Black;
-                }
-
-                if (tmpFileNameForDate.IndexOf("_", StringComparison.Ordinal) == 15)
-                {
-                    if (int.TryParse(tmpFileNameForDate.Substring(16, 1), out int i))
+                    fileDateTime = tmpFileNameForDate.Substring(0, 10) + " " +
+                                                          tmpFileNameForDate.Substring(11, 2) + ":" +
+                                                          tmpFileNameForDate.Substring(13, 2);
+                    string tenths = tmpFileNameForDate.Substring(16, 1);
+                    if (int.TryParse(tenths, out int secsToAdd))
                     {
-                        TenthsMin.Value = i;
+                        secsToAdd *= 6;
+
+                        if (DateTime.TryParse(fileDateTime, out DateTime dtWithTenths))
+                        {
+                            dtWithTenths = dtWithTenths.AddSeconds(secsToAdd);
+                            ObsrvDate.Value = dtWithTenths;
+                            dtObsrvTime.Value = dtWithTenths;
+                            grpObsrvtnTimestamp.BackColor = Color.Transparent;
+                            grpObsrvtnTimestamp.ForeColor = Color.White;
+                            result = dtWithTenths;
+                        }
+                    }
+                    else
+                    {
+                        if (DateTime.TryParse(fileDateTime, out DateTime dtNoTenths))
+                        {
+                            ObsrvDate.Value = dtNoTenths;
+                            dtObsrvTime.Value = dtNoTenths;
+                            grpObsrvtnTimestamp.BackColor = Color.Transparent;
+                            grpObsrvtnTimestamp.ForeColor = Color.White;
+                            result = dtNoTenths;
+                        }
                     }
                 }
+            }
+            if (result == DateTime.MinValue)
+            {
+                lblTimestampErr.Visible = true;
+                lblTimestampErr.Text = "Unable to parse Time";
+                ObsrvDate.Value = DateTime.Parse("2024-04-08");
             }
         }
 
         private void btnGenName_Click(object sender, EventArgs e)
         {
-            int i = Convert.ToInt32(TenthsMin.Value);
-            string tenths = i > 0 ? "_" + i.ToString() : "";
             lblFileName.Text = ObsrvDate.Value.ToString("yyyy-MM-dd") + "-" +
-                               dtObsrvTime.Value.ToString("HHmm") + tenths + "-" +
+                               dtObsrvTime.Value.ToString("HHmmss") + "-" +
                                cmbObserver.Text + "-" +
                                String.Join("_", GetFilters());
         }
@@ -344,9 +411,9 @@ namespace ALPOGalleryTool
 
             accepted = true;
 
-            if (cmbTelescopes.Text == "" && cmbTelescopes.Items.Count > 0)
+            if ((cmbTelescopes.Text == "" && cmbTelescopes.Items.Count > 0) && (txtCamera.Text.Trim() == ""))
             {
-                MessageBox.Show(@"Telescope should be selected from drop down", @"Missing Telescope Metadata",
+                MessageBox.Show(@"Telescope or camera needed", @"Missing Telescope Metadata",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -375,51 +442,115 @@ namespace ALPOGalleryTool
                     MessageBox.Show("This file name already exists", "Duplication");
                     return;
                 }
-                _recentFileNames.Add(lblFileName.Text);
-                MongoObservation dto = new MongoObservation();
+                MongoEclipseDto dto = new MongoEclipseDto();
+                dto.Camera = txtCamera.Text;
+                dto.EclipseType = GetEclipseType();
+                dto.Exposure = txtExposure.Text;
                 dto.FileName = lblFileName.Text;
                 dto.Filters = GetFilters();
+                dto.FocalLength = double.Parse(txtFocalLen.Text);
                 dto.HostGallery = "Eclipse";
-                dto.MimeType = Path.GetExtension(lstAttachments.Text)?.ToUpper().Substring(1);
+                dto.ISO = txtIso.Text;
+                if (double.TryParse(txtLat.Text, out double lat))
+                {
+                    dto.Latitude = lat;
+                }
+                dto.Location = txtLocation.Text;
+                if (double.TryParse(txtLong.Text, out double lng))
+                {
+                    dto.Longitude = lng;
+                }
+                if (double.TryParse(txtMagnitude.Text, out double mag))
+                {
+                    dto.Magnitude = mag;
+                }
+                try
+                {
+                    dto.MimeType = Path.GetExtension(lstAttachments.Text)?.ToUpper().Substring(1);
+                }
+                catch (Exception)
+                {
+                    dto.MimeType = Path.GetExtension(_adHocFile)?.ToUpper().Substring(1);
+                }                
                 dto.Notes = rtbNotes.Text;
+                if (double.TryParse(txtObscured.Text, out double obscured))
+                {
+                    dto.Obscured = obscured;
+                }
                 dto.ObsrvrInitials = cmbObserver.Text;
                 dto.Section = "Eclipse";
-                dto.Seeing = double.Parse(txtSeeing.Text);
+                if (double.TryParse(txtSeeing.Text, out double seeing))
+                {
+                    if (seeing > 0)
+                    {
+                        dto.Seeing = seeing;
+                    }
+                }
+                dto.Stage = cmbStage.Text;
                 dto.Tags = GetTags();
                 dto.Telescope = cmbTelescopes.Text;
-                dto.Transparency = double.Parse(txtTrnsp.Text);
+                if (double.TryParse(txtTrnsp.Text, out double trnsp))
+                {
+                    if (trnsp > 0)
+                    {
+                        dto.Transparency = trnsp;
+                    }
+                }
                 dto.UtObsrvDt = DateTime.Parse(ObsrvDate.Value.ToString("yyyy-MM-dd") + " " +
-                                               dtObsrvTime.Value.ToString("HH:mm"));
+                                               dtObsrvTime.Value.ToString("HH:mm:ss"));
                 int offset = DateTime.Now.IsDaylightSavingTime() ? -4 : -5;
                 dto.UtObsrvDt = dto.UtObsrvDt.AddHours(offset);
-                dto.Url = GetUrl();
+                dto.Url = GetUrl(dto.FileName);
                 if (dto.IsValid() == false)
                 {
                     MessageBox.Show(dto.ErrMsg, "Invalid Observation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                int recsAdded = _dataSrvc.AddObservation(dto);
+                int recsAdded = _eclipseDataSrvc.AddObservation(dto);
                 if (recsAdded == 1)
                 {
+                    _recentFileNames.Add(lblFileName.Text);
                     UpdateTagList();
                     while (_poppedTags.Count > 0)
                     {
                         _priorTags.Push(_poppedTags.Pop());
                     }
                     _priorTags.Push(txtTags.Text);
-                    string exportFldr = Path.GetDirectoryName(_wrkFldr);
+                    //string exportFldr = Path.GetDirectoryName(_outputFldr);
 
-                    exportFldr = Path.Combine(exportFldr,_eclipseDtTm);
+                    //string exportFldr = Path.Combine(_outputFldr, _eclipseDtTm);
 
-                    if (Directory.Exists(exportFldr) == false)
+                    if (Directory.Exists(_outputFldr) == false)
                     {
-                        Directory.CreateDirectory(exportFldr);
+                        Directory.CreateDirectory(_outputFldr);
+                    }
+
+                    string subfldr = chkAlbumMisc.Checked ? "Miscellaneous" : "";
+                    subfldr = chkRpts.Checked ? "Reports" : subfldr;
+                    if (subfldr.Length > 0)
+                    {
+                        subfldr = subfldr + @"\";
                     }
 
                     string trgFile = string.Empty;
-                    trgFile = Path.Combine(exportFldr, lblFileName.Text + Path.GetExtension(lstAttachments.Text));
+                    trgFile = Path.Combine(_outputFldr, subfldr, lblFileName.Text + Path.GetExtension(lstAttachments.Text));
+                    if (_usingAdHocFile)
+                    {
+                        if (_isPdfRpt)
+                        {
+                            File.Move(_adHocFile, trgFile + ".pdf");
+                        }
+                        else
+                        {
+                            imgObservation.Image = null;
+                            File.Move(_adHocFile, trgFile + Path.GetExtension(_adHocFile));
+                        }
+                    }
+                    else
+                    {
+                        File.WriteAllBytes(trgFile, _attachments[lstAttachments.Text].Data);
+                    }
 
-                    File.WriteAllBytes(trgFile, _attachments[lstAttachments.Text].Data);
                     _initDone = false;
                     lstAttachments.Items.Remove(lstAttachments.SelectedItem);
                     _initDone = true;
@@ -434,6 +565,43 @@ namespace ALPOGalleryTool
             {
                 Cursor = Cursors.Default;
             }
+        }
+
+        /// <summary>
+        /// Get the last 5 characters of the eclipse type
+        /// </summary>
+        /// <returns>eclispe type</returns>
+        private string GetEclipseType()
+        {
+            string code = cmbEclipse.Text.Substring(cmbEclipse.Text.Length - 5).Replace("(", "").Replace(")", "");
+            switch (code)
+            {
+                case "PLE":
+                    return "Partial Lunar Eclipse";
+                case "PSE":
+                    return "Partial Solar Eclipse";
+                case "TLE":
+                    return "Total Lunar Eclipse";
+                case "TSE":
+                    return "Total Solar Eclipse";
+                default:
+                    return "Undefined";
+            }
+        }
+
+        private void ResetFields()
+        {
+            txtCamera.Text = string.Empty;
+            txtExposure.Text = string.Empty;
+            txtFocalLen.Text = string.Empty;
+            txtIso.Text = string.Empty;
+            txtLat.Text = string.Empty;
+            txtLocation.Text = string.Empty;
+            txtLong.Text = string.Empty;
+            txtMagnitude.Text = string.Empty;
+            txtObscured.Text = string.Empty;
+            _usingAdHocFile = false;
+            _adHocFile = string.Empty;
         }
 
         private void btnAddTags_Click(object sender, EventArgs e)
@@ -474,9 +642,15 @@ namespace ALPOGalleryTool
             return result.ToArray();
         }
 
-        private string GetUrl()
+        private string GetUrl(string fileName)
         {
-            return Settings.Default.EclipseUrl + _eclipseTarget + "/" + _eclipseType + "/" + _eclipseDtTm + "/" + lblFileName.Text;
+            string subfldr = chkAlbumMisc.Checked ? "Miscellaneous" : "";
+            subfldr = chkRpts.Checked ? "Reports" : subfldr;
+            if (subfldr.Length > 0)
+            {
+                subfldr = subfldr + "/";
+            }
+            return Settings.Default.EclipseUrl + _dictEclipseRoster[cmbEclipse.Text] + "/" + subfldr + fileName;
         }
 
         private void btnApndTags_Click(object sender, EventArgs e)
@@ -513,7 +687,8 @@ namespace ALPOGalleryTool
             Cursor = Cursors.WaitCursor;
             try
             {
-                string exportFldr = Path.GetDirectoryName(_wrkFldr);
+                // string exportFldr = Path.GetDirectoryName(_wrkFldr);
+                string exportFldr = @"C:\Users\Jim\OneDrive\Documents\Astronomy\ALPO Online Content\Eclipse";
                 string trg = Path.Combine(exportFldr, "UploadReport.csv");
                 if (File.Exists(trg))
                 {
@@ -525,7 +700,7 @@ namespace ALPOGalleryTool
                 if (_wrkFldr.Contains(@"Eclipse"))
                 {
                     DirectoryInfo di = new DirectoryInfo(exportFldr);
-                    DirectoryInfo[] subfolders = di.GetDirectories("2023-10-28");
+                    DirectoryInfo[] subfolders = di.GetDirectories("2024-04-08");
                     foreach (DirectoryInfo fldr in subfolders)
                     {
                         FileInfo[] imgs = fldr.GetFiles();
@@ -536,6 +711,19 @@ namespace ALPOGalleryTool
                             string[] parts = img.Name.Split('-');
                             sb.AppendLine("Eclipse," + parts[4] + "," + img.Name + "," +
                                           _dataSrvc.GetObsrvUrl(fileNameNoExt));
+                        }
+                        DirectoryInfo[] miscfolders = fldr.GetDirectories();
+                        foreach (DirectoryInfo misc in miscfolders)
+                        {
+                            FileInfo[] miscimgs = misc.GetFiles();
+                            foreach (FileInfo img in miscimgs)
+                            {
+                                if (img.Extension.ToLower().Contains("lnk")) continue;
+                                string fileNameNoExt = Path.GetFileNameWithoutExtension(img.Name);
+                                string[] parts = img.Name.Split('-');
+                                sb.AppendLine("Eclipse," + parts[4] + "," + img.Name + "," +
+                                                                                 _dataSrvc.GetObsrvUrl(fileNameNoExt));
+                            }
                         }
                     }
                 }
@@ -602,6 +790,38 @@ namespace ALPOGalleryTool
                     { }
                 }
             }
+        }
+
+        private void cmbEclipse_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DirectoryInfo di = new DirectoryInfo(_wrkFldr);
+            string tmp = di.Parent.FullName;
+            string eclipseDate = cmbEclipse.Text.Substring(0, 10);
+            _outputFldr = Path.Combine(tmp, eclipseDate);
+            ObsrvDate.Value = DateTime.Parse(eclipseDate);
+        }
+
+        private void btnLoadFile_Click(object sender, EventArgs e)
+        {
+            if(dlgOpnFile.ShowDialog() == DialogResult.OK)
+            {
+                _usingAdHocFile = true;
+                string tmpAdHocFile = Path.Combine(Path.GetTempPath(), Path.GetFileName(dlgOpnFile.FileName));
+                File.Copy(dlgOpnFile.FileName, tmpAdHocFile, true);
+                _adHocFile = dlgOpnFile.FileName;
+                if (Path.GetExtension(dlgOpnFile.FileName).ToUpper() != ".PDF")
+                {
+                    _isPdfRpt = false;
+                    imgObservation.Image = Image.FromFile(tmpAdHocFile);
+                }
+                else
+                {
+                    _isPdfRpt = true;
+                    imgObservation.Image = Properties.Resources.PDF;
+                }
+            }
+            _tmpFileName = Path.GetFileName(dlgOpnFile.FileName);
+            TrySetObsrvTimestamp();
         }
     }
 }

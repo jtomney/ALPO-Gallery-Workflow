@@ -21,6 +21,7 @@ namespace ALPOGalleryTool
         private FrmSaturn _frmSaturn;
         private FrmSolar _frmSolar;
         private FrmVenus _frmVenus;
+        private FrmUploadReport _frmUploadReport;
 
         public FrmMenu(IDataSrvc dataSrvc, IEclipseDataSrvc eclipseDataSrvc)
         {
@@ -75,7 +76,7 @@ namespace ALPOGalleryTool
         {
             if (_frmEclipse == null)
             {
-                _frmEclipse = new FrmEclipse(_eclipseDataSrvc,_dataSrvc);
+                _frmEclipse = new FrmEclipse(_eclipseDataSrvc, _dataSrvc);
                 _frmEclipse.Disposed += delegate (object o, EventArgs arg)
                 {
                     _frmEclipse = null;
@@ -110,6 +111,20 @@ namespace ALPOGalleryTool
                 };
                 _frmVenus.MdiParent = this;
                 _frmVenus.Show();
+            }
+        }
+
+        private void reportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_frmUploadReport == null)
+            {
+                _frmUploadReport = new FrmUploadReport();
+                _frmUploadReport.Disposed += delegate (object o, EventArgs arg)
+                {
+                    _frmUploadReport = null;
+                };
+                _frmUploadReport.MdiParent = this;
+                _frmUploadReport.Show();
             }
         }
     }

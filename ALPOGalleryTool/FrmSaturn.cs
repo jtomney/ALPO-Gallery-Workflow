@@ -373,6 +373,7 @@ namespace ALPOGalleryTool
             if (lstAttachments.Text.ToUpper().Contains("-R-") ||
                 lstAttachments.Text.ToUpper().Contains("-R_") ||
                 lstAttachments.Text.ToUpper().Contains("_R_") ||
+                lstAttachments.Text.ToUpper().Contains("R610LP") ||
                 lstAttachments.Text.ToUpper().Contains(" R "))
             {
                 lstFilters.ClearSelected();
@@ -511,6 +512,7 @@ namespace ALPOGalleryTool
             lstOtherFltr.Items.Add("Wr11");
             lstOtherFltr.Items.Add("Wr15");
             lstOtherFltr.Items.Add("Wr23A");
+            lstOtherFltr.Items.Add("Wr38A");
             lstOtherFltr.Items.Add("Wr58");
             lstOtherFltr.Items.Add("Wr80A");
         }
@@ -593,40 +595,6 @@ namespace ALPOGalleryTool
                     cmbTelescopes.Items.Clear();
                 }
             }
-
-            //if (obsrvr != null)
-            //{
-            //    cmbObserver.Text = obsrvr.Initials;
-            //    var scopes = _telescopes.Where(s => s.Initials == obsrvr.Initials);
-            //    if (scopes.Any())
-            //    {
-            //        List<string> lst = new List<string>();
-            //        foreach (ITelescope scope in scopes)
-            //        {
-            //            string focalRatio = @"f/" + scope.FocalRatio;
-            //            string focalLength = @"FL " + scope.FocalLength;
-            //            string suffix = "";
-            //            if (scope.FocalLength > -1 || scope.FocalRatio > -1)
-            //            {
-            //                suffix = scope.FocalLength > -1 ? focalLength : focalRatio;
-            //                lst.Add((scope.ScopeType + @" " + scope.Aperture + @"mm " + suffix).Trim());
-            //            }
-            //            else
-            //            {
-            //                lst.Add((scope.ScopeType + @" " + scope.Aperture + @"mm " + suffix).Trim());
-            //            }
-            //        }
-
-            //        lst = PrepTelescopeList(lst);
-            //        cmbTelescopes.Items.Clear();
-            //        cmbTelescopes.Items.AddRange(lst.ToArray());
-            //        cmbTelescopes.SelectedIndex = -1;
-            //    }
-            //    else
-            //    {
-            //        cmbTelescopes.Items.Clear();
-            //    }
-            //}
         }
 
         private void UpdateTagList()
@@ -682,7 +650,7 @@ namespace ALPOGalleryTool
                     btnParseFileForDate_Click(this, null);
                     if (!_parsedDate)
                     {
-                        ObsrvDate.CalendarForeColor = Color.Red;
+                        imgDateWarn.Visible = true;
                         dtObsrvTime.CalendarForeColor = Color.Red;
                     }
                     else

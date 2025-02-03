@@ -76,7 +76,9 @@ namespace ALPOGalleryTool
             this.ckExtractOnly = new System.Windows.Forms.CheckBox();
             this.btnShowSpectrum = new System.Windows.Forms.Button();
             this.lblBadDate = new System.Windows.Forms.Label();
+            this.imgDateWarn = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).BeginInit();
             this.SuspendLayout();
             // 
             // imgObservation
@@ -152,7 +154,7 @@ namespace ALPOGalleryTool
             // 
             this.dtObsrvTime.CustomFormat = "HHmm";
             this.dtObsrvTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtObsrvTime.Location = new System.Drawing.Point(218, 211);
+            this.dtObsrvTime.Location = new System.Drawing.Point(246, 211);
             this.dtObsrvTime.Name = "dtObsrvTime";
             this.dtObsrvTime.ShowUpDown = true;
             this.dtObsrvTime.Size = new System.Drawing.Size(105, 21);
@@ -565,7 +567,7 @@ namespace ALPOGalleryTool
             this.lblBadDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.lblBadDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBadDate.ForeColor = System.Drawing.Color.Red;
-            this.lblBadDate.Location = new System.Drawing.Point(12, 207);
+            this.lblBadDate.Location = new System.Drawing.Point(7, 206);
             this.lblBadDate.Name = "lblBadDate";
             this.lblBadDate.Size = new System.Drawing.Size(23, 29);
             this.lblBadDate.TabIndex = 80;
@@ -573,12 +575,25 @@ namespace ALPOGalleryTool
             this.lblBadDate.Visible = false;
             this.lblBadDate.VisibleChanged += new System.EventHandler(this.lblBadDate_VisibleChanged);
             // 
+            // imgDateWarn
+            // 
+            this.imgDateWarn.BackColor = System.Drawing.Color.Yellow;
+            this.imgDateWarn.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.warning_icon;
+            this.imgDateWarn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.imgDateWarn.Location = new System.Drawing.Point(212, 207);
+            this.imgDateWarn.Name = "imgDateWarn";
+            this.imgDateWarn.Size = new System.Drawing.Size(28, 28);
+            this.imgDateWarn.TabIndex = 81;
+            this.imgDateWarn.TabStop = false;
+            this.imgDateWarn.Visible = false;
+            // 
             // FrmSolar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1364, 672);
+            this.Controls.Add(this.imgDateWarn);
             this.Controls.Add(this.lblBadDate);
             this.Controls.Add(this.btnShowSpectrum);
             this.Controls.Add(this.ckExtractOnly);
@@ -631,6 +646,7 @@ namespace ALPOGalleryTool
             this.Text = "Solar Observations";
             this.Shown += new System.EventHandler(this.FrmSolar_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -685,5 +701,6 @@ namespace ALPOGalleryTool
         private System.Windows.Forms.CheckBox ckExtractOnly;
         private System.Windows.Forms.Button btnShowSpectrum;
         private System.Windows.Forms.Label lblBadDate;
+        private System.Windows.Forms.PictureBox imgDateWarn;
     }
 }

@@ -43,6 +43,7 @@ namespace ALPOGalleryTool
             this.utilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aREntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +59,8 @@ namespace ALPOGalleryTool
             this.remoteToolStripMenuItem,
             this.anyToolStripMenuItem,
             this.eclipseToolStripMenuItem,
-            this.utilsToolStripMenuItem});
+            this.utilsToolStripMenuItem,
+            this.reportToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1370, 24);
@@ -136,15 +138,22 @@ namespace ALPOGalleryTool
             // aREntryToolStripMenuItem
             // 
             this.aREntryToolStripMenuItem.Name = "aREntryToolStripMenuItem";
-            this.aREntryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aREntryToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.aREntryToolStripMenuItem.Text = "AR Entry";
             this.aREntryToolStripMenuItem.Click += new System.EventHandler(this.aREntryToolStripMenuItem_Click);
             // 
             // checkURLToolStripMenuItem
             // 
             this.checkURLToolStripMenuItem.Name = "checkURLToolStripMenuItem";
-            this.checkURLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkURLToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.checkURLToolStripMenuItem.Text = "Check URL";
+            // 
+            // reportToolStripMenuItem
+            // 
+            this.reportToolStripMenuItem.Name = "reportToolStripMenuItem";
+            this.reportToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.reportToolStripMenuItem.Text = "Report";
+            this.reportToolStripMenuItem.Click += new System.EventHandler(this.reportToolStripMenuItem_Click);
             // 
             // FrmMenu
             // 
@@ -180,5 +189,6 @@ namespace ALPOGalleryTool
         private System.Windows.Forms.ToolStripMenuItem utilsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aREntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkURLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reportToolStripMenuItem;
     }
 }

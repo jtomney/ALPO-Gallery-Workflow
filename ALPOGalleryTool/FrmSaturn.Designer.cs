@@ -62,7 +62,9 @@ namespace ALPOGalleryTool
             this.txtSeeing = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.lblObsrvName = new System.Windows.Forms.Label();
+            this.imgDateWarn = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).BeginInit();
             this.SuspendLayout();
             // 
             // ckOverride
@@ -272,7 +274,7 @@ namespace ALPOGalleryTool
             // 
             this.dtObsrvTime.CustomFormat = "HHmm";
             this.dtObsrvTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtObsrvTime.Location = new System.Drawing.Point(199, 232);
+            this.dtObsrvTime.Location = new System.Drawing.Point(208, 232);
             this.dtObsrvTime.Name = "dtObsrvTime";
             this.dtObsrvTime.ShowUpDown = true;
             this.dtObsrvTime.Size = new System.Drawing.Size(105, 21);
@@ -395,12 +397,25 @@ namespace ALPOGalleryTool
             this.lblObsrvName.TabIndex = 100;
             this.lblObsrvName.Text = "tbd";
             // 
+            // imgDateWarn
+            // 
+            this.imgDateWarn.BackColor = System.Drawing.Color.Yellow;
+            this.imgDateWarn.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.warning_icon;
+            this.imgDateWarn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.imgDateWarn.Location = new System.Drawing.Point(17, 257);
+            this.imgDateWarn.Name = "imgDateWarn";
+            this.imgDateWarn.Size = new System.Drawing.Size(28, 28);
+            this.imgDateWarn.TabIndex = 101;
+            this.imgDateWarn.TabStop = false;
+            this.imgDateWarn.Visible = false;
+            // 
             // FrmSaturn
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1370, 681);
+            this.Controls.Add(this.imgDateWarn);
             this.Controls.Add(this.lblObsrvName);
             this.Controls.Add(this.txtTrnsp);
             this.Controls.Add(this.label3);
@@ -439,6 +454,7 @@ namespace ALPOGalleryTool
             this.Text = "Saturn Observations";
             this.Shown += new System.EventHandler(this.FrmSaturn_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -479,5 +495,6 @@ namespace ALPOGalleryTool
         private System.Windows.Forms.TextBox txtSeeing;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblObsrvName;
+        private System.Windows.Forms.PictureBox imgDateWarn;
     }
 }

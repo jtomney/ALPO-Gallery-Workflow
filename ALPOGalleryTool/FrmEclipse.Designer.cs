@@ -96,9 +96,11 @@
             this.chkAlbumMisc = new System.Windows.Forms.CheckBox();
             this.btnLoadFile = new System.Windows.Forms.Button();
             this.dlgOpnFile = new System.Windows.Forms.OpenFileDialog();
+            this.imgDateWarn = new System.Windows.Forms.PictureBox();
             this.grpObsrvtnTimestamp.SuspendLayout();
             this.grpLocation.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).BeginInit();
             this.SuspendLayout();
             // 
             // btnProfile
@@ -769,12 +771,25 @@
             this.btnLoadFile.UseVisualStyleBackColor = true;
             this.btnLoadFile.Click += new System.EventHandler(this.btnLoadFile_Click);
             // 
+            // imgDateWarn
+            // 
+            this.imgDateWarn.BackColor = System.Drawing.Color.Yellow;
+            this.imgDateWarn.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.warning_icon;
+            this.imgDateWarn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.imgDateWarn.Location = new System.Drawing.Point(156, 211);
+            this.imgDateWarn.Name = "imgDateWarn";
+            this.imgDateWarn.Size = new System.Drawing.Size(28, 28);
+            this.imgDateWarn.TabIndex = 136;
+            this.imgDateWarn.TabStop = false;
+            this.imgDateWarn.Visible = false;
+            // 
             // FrmEclipse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1364, 667);
+            this.Controls.Add(this.imgDateWarn);
             this.Controls.Add(this.btnLoadFile);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblTimestampErr);
@@ -843,6 +858,7 @@
             this.grpLocation.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -918,5 +934,6 @@
         private System.Windows.Forms.CheckBox chkRpts;
         private System.Windows.Forms.Button btnLoadFile;
         private System.Windows.Forms.OpenFileDialog dlgOpnFile;
+        private System.Windows.Forms.PictureBox imgDateWarn;
     }
 }

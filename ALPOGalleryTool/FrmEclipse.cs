@@ -314,7 +314,7 @@ namespace ALPOGalleryTool
             lblTimestampErr.Visible = false;
             if (string.IsNullOrEmpty(_tmpFileName))
             {
-                ObsrvDate.CalendarForeColor = Color.Red;
+                imgDateWarn.Visible = true;
                 return;
             }
             else

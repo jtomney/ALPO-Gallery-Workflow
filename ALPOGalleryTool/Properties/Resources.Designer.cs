@@ -190,6 +190,15 @@ namespace ALPOGalleryTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream mixkit_alert_quick_chime_766 {
+            get {
+                return ResourceManager.GetStream("mixkit_alert_quick_chime_766", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap PDF {
@@ -285,6 +294,16 @@ namespace ALPOGalleryTool.Properties {
         internal static System.Drawing.Bitmap user_add_icon {
             get {
                 object obj = ResourceManager.GetObject("user_add_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap warning_icon {
+            get {
+                object obj = ResourceManager.GetObject("warning_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

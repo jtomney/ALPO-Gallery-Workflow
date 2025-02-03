@@ -97,6 +97,26 @@ namespace ALPOGalleryTool
                                dtObsrvTime.Value.ToString("HHmm") + tenths + "-" +
                                cmbObserver.Text + "-" +
                                String.Join("_", filters);
+
+            string exportFldr = Path.GetDirectoryName(_wrkFldr);
+            if (cmbSections.Text == @"Solar")
+            {
+                exportFldr = Path.Combine(exportFldr, _carrRtn);
+            }
+            if (Directory.Exists(exportFldr) == false)
+            {
+                Directory.CreateDirectory(exportFldr);
+            }
+            string proposedFileName = Path.Combine(exportFldr,
+                    lblFileName.Text + Path.GetExtension(lstAttachments.Text));
+            if (File.Exists(proposedFileName))
+            {
+                DialogResult response = MessageBox.Show(
+                    @"This file already exists.",
+                    @"Duplicate File Issue", MessageBoxButtons.OK, MessageBoxIcon.Error
+                );
+                return;
+            }
         }
 
         protected void btnGenSectionRpt_Click(object sender, EventArgs e)
@@ -226,9 +246,10 @@ namespace ALPOGalleryTool
 
         protected void btnParseFileForDate_Click(object sender, EventArgs e)
         {
+            imgDateWarn.Visible = false;
             if (string.IsNullOrEmpty(_tmpFileName))
             {
-                ObsrvDate.CalendarForeColor = Color.Red;
+                imgDateWarn.Visible = true;
                 return;
             }
             else
@@ -274,6 +295,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 return;
             }
 
@@ -297,6 +319,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 return;
             }
 
@@ -327,6 +350,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 return;
             }
 
@@ -341,7 +365,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
-
+                else { imgDateWarn.Visible = true; }
                 if (int.TryParse(_tmpFileName.Substring(17, 2), out int secs))
                 {
                     TenthsMin.Value = secs / 6;
@@ -359,7 +383,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
-
+                else { imgDateWarn.Visible = true; }
                 if (int.TryParse(_tmpFileName.Substring(17, 2), out int secs))
                 {
                     TenthsMin.Value = secs / 6;
@@ -376,6 +400,10 @@ namespace ALPOGalleryTool
                 {
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
+                }
+                else
+                {
+                    imgDateWarn.Visible = true;
                 }
 
                 if (int.TryParse(_tmpFileName.Substring(17, 1), out int secs))
@@ -396,6 +424,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 return;
             }
 
@@ -409,6 +438,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 if (int.TryParse(_tmpFileName.Substring(17, 2), out int secs))
                 {
                     TenthsMin.Value = secs / 6;
@@ -428,6 +458,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 if (int.TryParse(_tmpFileName.Substring(14, 1), out int secs))
                 {
                     TenthsMin.Value = secs;
@@ -448,6 +479,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 if (int.TryParse(_tmpFileName.Substring(16, 1), out int secs))
                 {
                     TenthsMin.Value = secs;
@@ -474,6 +506,7 @@ namespace ALPOGalleryTool
                             TenthsMin.Value = secs / 6;
                         }
                     }
+                    else { imgDateWarn.Visible = true; }
                 }
             }
 
@@ -488,6 +521,7 @@ namespace ALPOGalleryTool
                     ObsrvDate.Value = dtm;
                     dtObsrvTime.Value = dtm;
                 }
+                else { imgDateWarn.Visible = true; }
                 return;
             }
 
@@ -502,7 +536,7 @@ namespace ALPOGalleryTool
             }
             else
             {
-                ObsrvDate.CalendarForeColor = Color.Red;
+                imgDateWarn.Visible = true;
             }
 
             if (tmpFileNameForDate.IndexOf("_", StringComparison.Ordinal) == 15)
@@ -546,19 +580,26 @@ namespace ALPOGalleryTool
                 return;
             }
 
-            while (File.Exists(lblFileName.Text))
+            string exportFldr = Path.GetDirectoryName(_wrkFldr);
+            if (cmbSections.Text == @"Solar")
             {
-                DialogResult response = MessageBox.Show(
-                    @"This file already exists. Proceed by making a duplicate file?",
-                    @"Duplicate File Issue", MessageBoxButtons.YesNo, MessageBoxIcon.Question
-                );
-                accepted = response == DialogResult.Yes;
-                if (accepted)
+                exportFldr = Path.Combine(exportFldr, _carrRtn);
+            }
+            if (Directory.Exists(exportFldr) == false)
+            {
+                Directory.CreateDirectory(exportFldr);
+            }
+
+            if (chkImgOnly.Checked == false)
+            {
+                string proposedFileName = Path.Combine(exportFldr,
+                        lblFileName.Text + Path.GetExtension(lstAttachments.Text));
+                while (File.Exists(proposedFileName))
                 {
-                    lblFileName.Text = @"DUP_" + lblFileName.Text;
-                }
-                else
-                {
+                    DialogResult response = MessageBox.Show(
+                        @"This file already exists.",
+                        @"Duplicate File Issue", MessageBoxButtons.OK, MessageBoxIcon.Error
+                    );
                     return;
                 }
             }
@@ -587,20 +628,19 @@ namespace ALPOGalleryTool
                 {
                     MessageBox.Show(dto.ErrMsg, "Invalid Observation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                int recsAdded = 0;
 
-                int recsAdded = _dataSrvc.AddObservation(dto);
+                if (chkImgOnly.Checked == false)
+                {
+                    recsAdded = _dataSrvc.AddObservation(dto);
+                }
+                else
+                {
+                    recsAdded = 1;
+                }
                 if (recsAdded == 1)
                 {
                     UpdateTagList();
-                    string exportFldr = Path.GetDirectoryName(_wrkFldr);
-                    if (cmbSections.Text == @"Solar")
-                    {
-                        exportFldr = Path.Combine(exportFldr, _carrRtn);
-                    }
-                    if (Directory.Exists(exportFldr) == false)
-                    {
-                        Directory.CreateDirectory(exportFldr);
-                    }
 
                     string trgFile = Path.Combine(exportFldr,
                         lblFileName.Text + Path.GetExtension(lstAttachments.Text));
@@ -720,6 +760,7 @@ namespace ALPOGalleryTool
                     imgObservation.Text = lstAttachments.Text;
                     TenthsMin.Value = 0;
                     SetTagList();
+                    ckOverride.Checked = false;
                     lblOversized.Visible = _attachments[lstAttachments.Text].Data.LongLength > 300000;
                     _tmpFileName = lstAttachments.Text;
                     if (!HasValidImgExtension())
@@ -1171,11 +1212,13 @@ namespace ALPOGalleryTool
             lstFilters.Items.Add("WL");
             lstFilters.Items.Add("Wr8");
             lstFilters.Items.Add("Wr11");
+            lstFilters.Items.Add("Wr12");
             lstFilters.Items.Add("Wr15");
             lstFilters.Items.Add("Wr21");
             lstFilters.Items.Add("Wr23A");
             lstFilters.Items.Add("Wr25");
             lstFilters.Items.Add("Wr30");
+            lstFilters.Items.Add("Wr38A");
             lstFilters.Items.Add("Wr47");
             lstFilters.Items.Add("Wr56");
             lstFilters.Items.Add("Wr58");
@@ -1407,6 +1450,25 @@ namespace ALPOGalleryTool
                     _tags.Add(tag);
                 }
             }
+        }
+
+        private void imgDateWarn_VisibleChanged(object sender, EventArgs e)
+        {
+            if (imgDateWarn.Visible)
+            {
+                using (SoundPlayer player = new SoundPlayer(Resources.alert_chime))
+                {
+                    player.Play();
+                }
+            }
+        }
+
+        private void btnDeleteAttachment_Click(object sender, EventArgs e)
+        {
+            _initDone = false;
+            lstAttachments.Items.Remove(lstAttachments.SelectedItem);
+            _initDone = true;
+            lblFileName.Text = "File name";
         }
     }
 }

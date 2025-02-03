@@ -197,6 +197,7 @@ namespace ALPOGalleryTool
                     lblOversized.Text = "Oversized: " + _attachments[lstAttachments.Text].Data.LongLength.ToString("N0");
                     _tmpFileName = lstAttachments.Text;
                     TrySetFilter();
+                    imgDateWarn.Visible = false;
                     TrySetObsrvTimestamp();
                     lblFileName.Text = String.Empty;
                     LoadTags();
@@ -360,7 +361,7 @@ namespace ALPOGalleryTool
             lblBadDate.Visible = false;
             if (string.IsNullOrEmpty(_tmpFileName))
             {
-                ObsrvDate.CalendarForeColor = Color.Red;
+                imgDateWarn.Visible = true;
                 return;
             }
             else
@@ -538,7 +539,7 @@ namespace ALPOGalleryTool
             }
             catch (Exception)
             {
-                ObsrvDate.CalendarForeColor = Color.Red;
+                imgDateWarn.Visible = true;
             }
             finally
             {

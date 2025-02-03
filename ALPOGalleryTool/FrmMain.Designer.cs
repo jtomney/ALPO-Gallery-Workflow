@@ -30,6 +30,8 @@
         {
             this.tabPlanets = new System.Windows.Forms.TabControl();
             this.tabSolar = new System.Windows.Forms.TabPage();
+            this.imgDateWarn = new System.Windows.Forms.PictureBox();
+            this.chkImgOnly = new System.Windows.Forms.CheckBox();
             this.txtOffset3 = new System.Windows.Forms.TextBox();
             this.txtOffset2 = new System.Windows.Forms.TextBox();
             this.txtOffset1 = new System.Windows.Forms.TextBox();
@@ -83,8 +85,10 @@
             this.dtEnd = new System.Windows.Forms.DateTimePicker();
             this.dtStart = new System.Windows.Forms.DateTimePicker();
             this.fldrDlg = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnDeleteAttachment = new System.Windows.Forms.Button();
             this.tabPlanets.SuspendLayout();
             this.tabSolar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnImgSelFolder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).BeginInit();
             this.tabVenus.SuspendLayout();
@@ -111,6 +115,9 @@
             // 
             this.tabSolar.BackColor = System.Drawing.Color.Black;
             this.tabSolar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.tabSolar.Controls.Add(this.btnDeleteAttachment);
+            this.tabSolar.Controls.Add(this.imgDateWarn);
+            this.tabSolar.Controls.Add(this.chkImgOnly);
             this.tabSolar.Controls.Add(this.txtOffset3);
             this.tabSolar.Controls.Add(this.txtOffset2);
             this.tabSolar.Controls.Add(this.txtOffset1);
@@ -158,6 +165,30 @@
             this.tabSolar.Size = new System.Drawing.Size(1343, 719);
             this.tabSolar.TabIndex = 0;
             this.tabSolar.Text = "Solar";
+            // 
+            // imgDateWarn
+            // 
+            this.imgDateWarn.BackColor = System.Drawing.Color.Yellow;
+            this.imgDateWarn.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.warning_icon;
+            this.imgDateWarn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.imgDateWarn.Location = new System.Drawing.Point(168, 248);
+            this.imgDateWarn.Name = "imgDateWarn";
+            this.imgDateWarn.Size = new System.Drawing.Size(28, 28);
+            this.imgDateWarn.TabIndex = 46;
+            this.imgDateWarn.TabStop = false;
+            this.imgDateWarn.Visible = false;
+            this.imgDateWarn.VisibleChanged += new System.EventHandler(this.imgDateWarn_VisibleChanged);
+            // 
+            // chkImgOnly
+            // 
+            this.chkImgOnly.AutoSize = true;
+            this.chkImgOnly.ForeColor = System.Drawing.Color.White;
+            this.chkImgOnly.Location = new System.Drawing.Point(631, 578);
+            this.chkImgOnly.Name = "chkImgOnly";
+            this.chkImgOnly.Size = new System.Drawing.Size(101, 22);
+            this.chkImgOnly.TabIndex = 45;
+            this.chkImgOnly.Text = "Image Only";
+            this.chkImgOnly.UseVisualStyleBackColor = true;
             // 
             // txtOffset3
             // 
@@ -556,7 +587,7 @@
             // 
             this.dtObsrvTime.CustomFormat = "HHmm";
             this.dtObsrvTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtObsrvTime.Location = new System.Drawing.Point(192, 249);
+            this.dtObsrvTime.Location = new System.Drawing.Point(200, 249);
             this.dtObsrvTime.Name = "dtObsrvTime";
             this.dtObsrvTime.ShowUpDown = true;
             this.dtObsrvTime.Size = new System.Drawing.Size(91, 24);
@@ -685,6 +716,17 @@
             this.dtStart.Size = new System.Drawing.Size(142, 24);
             this.dtStart.TabIndex = 0;
             // 
+            // btnDeleteAttachment
+            // 
+            this.btnDeleteAttachment.BackgroundImage = global::ALPOGalleryTool.Properties.Resources.Actions_trash_empty_icon;
+            this.btnDeleteAttachment.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnDeleteAttachment.Location = new System.Drawing.Point(644, 137);
+            this.btnDeleteAttachment.Name = "btnDeleteAttachment";
+            this.btnDeleteAttachment.Size = new System.Drawing.Size(32, 32);
+            this.btnDeleteAttachment.TabIndex = 47;
+            this.btnDeleteAttachment.UseVisualStyleBackColor = true;
+            this.btnDeleteAttachment.Click += new System.EventHandler(this.btnDeleteAttachment_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -699,6 +741,7 @@
             this.tabPlanets.ResumeLayout(false);
             this.tabSolar.ResumeLayout(false);
             this.tabSolar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgDateWarn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnImgSelFolder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TenthsMin)).EndInit();
             this.tabVenus.ResumeLayout(false);
@@ -767,6 +810,9 @@
         private System.Windows.Forms.TextBox txtOffset3;
         private System.Windows.Forms.TextBox txtOffset2;
         private System.Windows.Forms.TextBox txtOffset1;
+        private System.Windows.Forms.CheckBox chkImgOnly;
+        private System.Windows.Forms.PictureBox imgDateWarn;
+        private System.Windows.Forms.Button btnDeleteAttachment;
     }
 }
 

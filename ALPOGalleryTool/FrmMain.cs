@@ -299,6 +299,22 @@ namespace ALPOGalleryTool
                 }
                 return;
             }
+
+            if (cmbObserver.Text == @"TrvBry")  //yyyy-MM-dd_hh-mm
+            {
+                string fileDT = _tmpFileName.Substring(0, 4) + "-" +
+                                _tmpFileName.Substring(5, 2) + "-" +
+                                _tmpFileName.Substring(8, 2) + " " +
+                                _tmpFileName.Substring(11, 2) + ":" +
+                                _tmpFileName.Substring(14, 2);
+                if (DateTime.TryParse(fileDT, out DateTime dtm))
+                {
+                    ObsrvDate.Value = dtm;
+                    dtObsrvTime.Value = dtm;
+                }
+                return;
+            }
+
             if (cmbObserver.Text == @"FboVrza")
             {
                 string fileDT = _tmpFileName.Substring(0, 4) + "-" +
@@ -313,6 +329,7 @@ namespace ALPOGalleryTool
                 }
                 return;
             }
+
             if (cmbObserver.Text == @"NiaMNl" || cmbObserver.Text == @"MrcDlcrx" ||
                 cmbObserver.Text == @"JhnWrll")
             {
